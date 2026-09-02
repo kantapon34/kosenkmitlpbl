@@ -1,0 +1,2857 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KOSEN-KMITL | สถาบันโคเซ็น แห่งสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</title>
+  <!-- Google Fonts: Prompt & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN & Supabase Client -->
+  <script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.4/dist/umd/supabase.min.js"></script>
+  <style>
+    :root {
+      /* Primary Brand Colors */
+      --color-royal-blue: #2563EB;
+      --color-royal-blue-hover: #1D4ED8;
+      --color-royal-blue-light: rgba(37, 99, 235, 0.08);
+      --color-royal-blue-glow: rgba(37, 99, 235, 0.3);
+      
+      --color-orange: #F97316;
+      --color-orange-hover: #EA580C;
+      --color-orange-light: rgba(249, 115, 22, 0.08);
+      --color-orange-glow: rgba(249, 115, 22, 0.3);
+
+      --color-purple: #8B5CF6;
+      --color-red: #EF4444;
+      --color-green: #10B981;
+      
+      /* Neutral Colors */
+      --color-slate-900: #0F172A;
+      --color-slate-800: #1E293B;
+      --color-slate-700: #334155;
+      --color-slate-600: #475569;
+      --color-slate-500: #64748B;
+      --color-slate-400: #94A3B8;
+      --color-slate-300: #CBD5E1;
+      --color-slate-200: #E2E8F0;
+      --color-slate-100: #F1F5F9;
+      --color-slate-50: #F8FAFC;
+      --color-white: #FFFFFF;
+      
+      /* Liquid Glass Tokens */
+      --glass-bg: rgba(255, 255, 255, 0.82);
+      --glass-bg-hover: rgba(255, 255, 255, 0.94);
+      --glass-card: rgba(255, 255, 255, 0.72);
+      --glass-card-border: rgba(255, 255, 255, 0.88);
+      --glass-border-subtle: rgba(226, 232, 240, 0.8);
+      --glass-blur: blur(20px) saturate(180%);
+      --glass-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.08), 0 4px 16px 0 rgba(0, 0, 0, 0.03);
+      --glass-shadow-hover: 0 25px 50px -12px rgba(37, 99, 235, 0.15), 0 8px 24px 0 rgba(0, 0, 0, 0.04);
+
+      /* Typography Tokens */
+      --font-family: 'Prompt', 'Inter', system-ui, -apple-system, sans-serif;
+
+      /* Radii */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+
+      /* Transitions */
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family);
+      background-color: #F8FAFC;
+      color: var(--color-slate-800);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Abstract Liquid Shapes */
+    .bg-liquid-shapes {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: -10; overflow: hidden;
+    }
+
+    .blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.45;
+      animation: floatBlob 18s ease-in-out infinite alternate;
+    }
+    .blob-blue-1 { top: -10%; left: -5%; width: 550px; height: 550px; background: radial-gradient(circle, rgba(37, 99, 235, 0.4) 0%, rgba(96, 165, 250, 0) 70%); }
+    .blob-orange-1 { top: 40%; right: -8%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(249, 115, 22, 0.35) 0%, rgba(253, 186, 116, 0) 70%); animation-delay: -5s; }
+    .blob-blue-2 { bottom: -15%; left: 30%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(147, 197, 253, 0) 70%); animation-delay: -10s; }
+
+    @keyframes floatBlob {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(40px, 30px) scale(1.08); }
+      100% { transform: translate(-30px, 50px) scale(0.95); }
+    }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .badge-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: var(--radius-full); font-size: 12px; font-weight: 500; letter-spacing: -0.01em; transition: all 0.2s ease; }
+    .badge-blue { background: #EFF6FF; color: #2563EB; border: 1px solid #DBEAFE; }
+    .badge-orange { background: #FFF7ED; color: #EA580C; border: 1px solid #FFEDD5; }
+    .badge-purple { background: #F5F3FF; color: #7C3AED; border: 1px solid #EDE9FE; }
+    .badge-slate { background: #F1F5F9; color: #64748B; border: 1px solid #E2E8F0; }
+
+    /* MAIN CONTAINER */
+    .app-viewport-container {
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      background: transparent;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* LIQUID GLASS COMPONENTS */
+    .glass-panel { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-card-border); box-shadow: var(--glass-shadow); border-radius: var(--radius-xl); transition: var(--transition-normal); }
+    .glass-panel-hover:hover { background: var(--glass-bg-hover); border-color: rgba(255, 255, 255, 0.95); box-shadow: var(--glass-shadow-hover); transform: translateY(-4px); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 18px; border-radius: var(--radius-full); font-size: 13.5px; font-weight: 500; font-family: var(--font-family); cursor: pointer; border: 1px solid transparent; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); text-decoration: none; white-space: nowrap; }
+    .btn-primary { background: #2563EB; color: var(--color-white); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(37, 99, 235, 0.22); }
+    .btn-primary:hover { background: #1D4ED8; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28); }
+
+    .btn-orange { background: #F97316; color: var(--color-white); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(249, 115, 22, 0.22); }
+    .btn-orange:hover { background: #EA580C; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(249, 115, 22, 0.28); }
+
+    .btn-purple { background: #8B5CF6; color: var(--color-white); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(139, 92, 246, 0.22); }
+    .btn-purple:hover { background: #7C3AED; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(139, 92, 246, 0.28); }
+
+    .btn-red { background: #EF4444; color: var(--color-white); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(239, 68, 68, 0.22); }
+    .btn-red:hover { background: #DC2626; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(239, 68, 68, 0.28); }
+
+    .btn-green { background: #10B981; color: var(--color-white); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(16, 185, 129, 0.22); }
+    .btn-green:hover { background: #059669; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(16, 185, 129, 0.28); }
+
+    .btn-glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(226, 232, 240, 0.9); color: var(--color-slate-700); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); }
+    .btn-glass:hover { background: #FFFFFF; color: var(--color-slate-900); border-color: var(--color-slate-300); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+
+    .btn-outline { background: transparent; border: 1.5px solid var(--color-slate-200); color: var(--color-slate-700); }
+    .btn-outline:hover { border-color: var(--color-royal-blue); color: var(--color-royal-blue); background: var(--color-royal-blue-light); }
+
+    .btn-sm { padding: 5px 14px; font-size: 12.5px; }
+    .btn-lg { padding: 11px 24px; font-size: 15px; border-radius: var(--radius-full); }
+
+    .input-field { width: 100%; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--color-slate-200); background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); font-size: 14px; font-family: var(--font-family); color: var(--color-slate-800); outline: none; }
+    .input-field:focus { border-color: var(--color-royal-blue); box-shadow: 0 0 0 4px var(--color-royal-blue-glow); background: white; }
+
+    .input-group { display: flex; flex-direction: column; gap: 6px; }
+    .input-label { font-size: 13px; font-weight: 600; color: var(--color-slate-700); }
+
+    .tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; background: var(--color-slate-100); color: var(--color-slate-700); }
+    .tag-blue { background: rgba(37, 99, 235, 0.1); color: var(--color-royal-blue); }
+    .tag-orange { background: rgba(249, 115, 22, 0.1); color: var(--color-orange); }
+
+    /* FLOATING NAV */
+    .navbar-container { position: sticky; top: 14px; z-index: 500; padding: 0 20px; margin-bottom: 24px; }
+    .navbar { display: flex; align-items: center; justify-content: space-between; padding: 6px 14px 6px 18px; border-radius: var(--radius-full); background: rgba(255, 255, 255, 0.82); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid rgba(226, 232, 240, 0.85); box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.02); transition: var(--transition-normal); }
+
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; font-size: 17px; letter-spacing: -0.02em; color: var(--color-slate-900); }
+    .nav-logo-icon { width: 34px; height: 34px; border-radius: var(--radius-md); background: linear-gradient(135deg, #2563EB, #F97316); display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25); }
+
+    .nav-links { display: flex; align-items: center; gap: 3px; list-style: none; background: rgba(241, 245, 249, 0.65); padding: 3px 4px; border-radius: var(--radius-full); border: 1px solid rgba(226, 232, 240, 0.65); }
+    .nav-link { background: transparent; border: none; outline: none; padding: 6px 14px; border-radius: var(--radius-full); font-size: 13.5px; font-weight: 500; font-family: var(--font-family); color: var(--color-slate-500); text-decoration: none; cursor: pointer; transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; }
+    .nav-link:hover { color: var(--color-slate-900); background: rgba(255, 255, 255, 0.6); }
+    .nav-link.active { color: var(--color-slate-900); background: #FFFFFF; font-weight: 600; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.03); }
+    .nav-link.admin-link { color: #7C3AED; display: inline-flex; align-items: center; gap: 4px; }
+    .nav-link.admin-link:hover { color: #6D28D9; background: rgba(124, 58, 237, 0.08); }
+    .nav-link.admin-link.active { background: #FFFFFF; color: #7C3AED; font-weight: 600; box-shadow: 0 1px 3px rgba(124, 58, 237, 0.12), 0 1px 2px rgba(0, 0, 0, 0.03); }
+
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    #navLoginBtn { background: #0F172A; color: #FFFFFF; padding: 6px 15px; font-size: 13px; font-weight: 500; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+    #navLoginBtn:hover { background: #1E293B; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); }
+    #navProfilePill img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1.5px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.2s ease; }
+    #navProfilePill:hover img { border-color: var(--color-royal-blue); transform: scale(1.06); }
+    .mobile-menu-toggle { display: none; width: 34px; height: 34px; border-radius: var(--radius-sm); background: transparent; border: 1px solid #E2E8F0; cursor: pointer; color: var(--color-slate-700); align-items: center; justify-content: center; transition: var(--transition-fast); }
+    .mobile-menu-toggle:hover { background: #F1F5F9; color: var(--color-slate-900); }
+    @media (max-width: 900px) { .nav-links { display: none; } .mobile-menu-toggle { display: flex; } }
+
+    /* PAGES WRAPPER */
+    .page-view { display: none; animation: fadeIn 0.35s ease; padding: 0 24px 64px 24px; }
+    .page-view.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* HOME PAGE */
+    .hero-section { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; padding: 30px 0 50px 0; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: var(--radius-full); background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(37, 99, 235, 0.2); color: var(--color-royal-blue); font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+    .hero-title { font-size: 54px; font-weight: 800; line-height: 1.15; letter-spacing: -1.2px; color: var(--color-slate-900); margin-bottom: 20px; }
+    .hero-title span { background: linear-gradient(135deg, #2563EB, #F97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-subtitle { font-size: 17px; color: var(--color-slate-600); line-height: 1.7; margin-bottom: 32px; max-width: 540px; }
+    .hero-buttons { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .hero-visual { position: relative; }
+    .hero-img-container { position: relative; border-radius: var(--radius-xl); overflow: hidden; box-shadow: 0 30px 60px -15px rgba(37, 99, 235, 0.2); border: 4px solid rgba(255, 255, 255, 0.95); }
+    .hero-img-container img { width: 100%; height: 420px; object-fit: cover; display: block; }
+    .floating-glass-card { position: absolute; bottom: -20px; left: -20px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; max-width: 300px; z-index: 10; }
+    .stat-circle { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #F97316, #EA580C); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+
+    .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; margin-top: 48px; }
+    .section-title-group h2 { font-size: 30px; font-weight: 800; color: var(--color-slate-900); letter-spacing: -0.5px; }
+    .section-title-group p { font-size: 15px; color: var(--color-slate-500); margin-top: 4px; }
+
+    .quick-access-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 48px; }
+    .qa-card { padding: 24px; display: flex; flex-direction: column; gap: 12px; cursor: pointer; }
+    .qa-icon { width: 48px; height: 48px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; }
+    .qa-icon-blue { background: linear-gradient(135deg, #2563EB, #3B82F6); box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25); }
+    .qa-icon-orange { background: linear-gradient(135deg, #F97316, #FB923C); box-shadow: 0 8px 16px rgba(249, 115, 22, 0.25); }
+    .qa-icon-purple { background: linear-gradient(135deg, #8B5CF6, #A78BFA); box-shadow: 0 8px 16px rgba(139, 92, 246, 0.25); }
+    .qa-icon-teal { background: linear-gradient(135deg, #14B8A6, #2DD4BF); box-shadow: 0 8px 16px rgba(20, 184, 166, 0.25); }
+
+    .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .project-card { overflow: hidden; display: flex; flex-direction: column; cursor: pointer; position: relative; }
+    .project-thumb { position: relative; width: 100%; height: 220px; overflow: hidden; }
+    .project-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .project-card:hover .project-thumb img { transform: scale(1.06); }
+    .project-badge { position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); color: white; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid rgba(255, 255, 255, 0.2); }
+    .project-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
+    .project-title { font-size: 18px; font-weight: 700; color: var(--color-slate-900); line-height: 1.4; }
+    .project-author { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--color-slate-600); }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid white; }
+    .project-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--color-slate-100); font-size: 13px; color: var(--color-slate-500); }
+    .project-stats { display: flex; align-items: center; gap: 14px; }
+    .stat-btn { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    .stat-btn.liked { color: #EF4444; }
+
+    /* Footer */
+    .footer { margin-top: 80px; padding: 60px 40px 30px 40px; border-radius: var(--radius-xl); background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(16px); color: var(--color-slate-300); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand h3 { font-size: 20px; color: white; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .footer-links h4 { color: white; font-size: 15px; margin-bottom: 16px; }
+    .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+    .footer-links a { color: var(--color-slate-400); text-decoration: none; cursor: pointer; }
+    .footer-links a:hover { color: white; }
+    .footer-bottom { padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--color-slate-500); }
+
+    /* PORTFOLIO PAGE */
+    .masonry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .floating-post-btn { position: fixed; bottom: 32px; right: 32px; z-index: 400; box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4); display: flex; align-items: center; gap: 8px; }
+    .skeleton-card { height: 340px; border-radius: var(--radius-xl); background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; }
+    @keyframes skeletonLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* DETAIL PAGE */
+    .detail-container { display: grid; grid-template-columns: 2.5fr 1fr; gap: 32px; }
+    .carousel-main { width: 100%; height: 440px; border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 16px; box-shadow: var(--glass-shadow); }
+    .carousel-main img { width: 100%; height: 100%; object-fit: cover; }
+    .carousel-thumbs { display: flex; gap: 12px; margin-bottom: 32px; }
+    .thumb-item { width: 100px; height: 70px; border-radius: var(--radius-md); overflow: hidden; cursor: pointer; border: 2px solid transparent; opacity: 0.7; }
+    .thumb-item.active, .thumb-item:hover { border-color: var(--color-royal-blue); opacity: 1; }
+    .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+    .tech-stack-group { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 24px 0; }
+    .tech-pill { padding: 6px 14px; border-radius: var(--radius-full); background: rgba(37, 99, 235, 0.08); color: var(--color-royal-blue); font-size: 13px; font-weight: 600; border: 1px solid rgba(37, 99, 235, 0.2); }
+    .comments-box { margin-top: 40px; padding: 28px; }
+    .comment-item { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--color-slate-100); }
+
+    /* NEWS PAGE */
+    .news-layout { display: grid; grid-template-columns: 2.4fr 1fr; gap: 32px; }
+    .featured-news-card { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; overflow: hidden; margin-bottom: 32px; position: relative; }
+    .featured-news-img { height: 280px; object-fit: cover; width: 100%; border-radius: var(--radius-lg); }
+
+    /* DOCUMENTS PAGE */
+    .doc-table { width: 100%; border-collapse: separate; border-spacing: 0 12px; }
+    .doc-row { background: rgba(255, 255, 255, 0.75); backdrop-filter: var(--glass-blur); border-radius: var(--radius-lg); }
+    .doc-row:hover { background: white; box-shadow: var(--glass-shadow-hover); }
+    .doc-cell { padding: 18px 20px; font-size: 14px; }
+    .doc-cell:first-child { border-top-left-radius: var(--radius-lg); border-bottom-left-radius: var(--radius-lg); }
+    .doc-cell:last-child { border-top-right-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg); text-align: right; }
+    .doc-icon-box { width: 42px; height: 42px; border-radius: var(--radius-md); background: rgba(37, 99, 235, 0.1); color: var(--color-royal-blue); display: flex; align-items: center; justify-content: center; }
+
+    /* AUTH PAGES */
+    .auth-wrapper { display: flex; align-items: center; justify-content: center; min-height: 70vh; }
+    .auth-card { width: 100%; max-width: 460px; padding: 40px; display: flex; flex-direction: column; gap: 20px; }
+    .auth-header { text-align: center; }
+    .auth-header h2 { font-size: 26px; font-weight: 800; color: var(--color-slate-900); margin-top: 12px; }
+    .step-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .step-dot { flex: 1; height: 6px; border-radius: 3px; background: var(--color-slate-200); }
+    .step-dot.active { background: var(--color-royal-blue); }
+
+    .preset-pill-group { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .preset-pill { font-size: 12px; padding: 5px 12px; border-radius: var(--radius-full); background: #FFFFFF; border: 1px solid #E2E8F0; cursor: pointer; color: #64748B; font-weight: 500; font-family: var(--font-family); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); transition: all 0.15s ease; }
+    .preset-pill:hover { background: #F8FAFC; color: #0F172A; border-color: #CBD5E1; }
+
+    /* DASHBOARD */
+    .dashboard-layout { display: grid; grid-template-columns: 240px 1fr; gap: 28px; }
+    .dash-sidebar { padding: 24px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .dash-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; color: var(--color-slate-600); cursor: pointer; }
+    .dash-nav-item.active, .dash-nav-item:hover { background: var(--color-royal-blue-light); color: var(--color-royal-blue); font-weight: 600; }
+    .dash-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 28px; }
+    .dash-stat-card { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+
+    /* UPLOAD PAGE */
+    .dropzone { border: 2px dashed var(--color-slate-300); border-radius: var(--radius-xl); padding: 40px; text-align: center; background: rgba(255, 255, 255, 0.5); cursor: pointer; }
+    .dropzone:hover { border-color: var(--color-royal-blue); background: var(--color-royal-blue-light); }
+
+    /* ADMIN PANEL STYLING */
+    .admin-tab-bar { display: flex; gap: 8px; border-bottom: 2px solid var(--color-slate-200); margin-bottom: 24px; flex-wrap: wrap; }
+    .admin-tab-btn { padding: 10px 18px; border: none; background: transparent; font-size: 14px; font-weight: 600; color: var(--color-slate-600); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-family: var(--font-family); }
+    .admin-tab-btn.active { color: #8B5CF6; border-color: #8B5CF6; }
+
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .admin-table th { text-align: left; padding: 12px 16px; background: rgba(15, 23, 42, 0.04); color: var(--color-slate-700); font-weight: 700; border-bottom: 2px solid var(--color-slate-200); }
+    .admin-table td { padding: 16px; border-bottom: 1px solid var(--color-slate-100); vertical-align: middle; }
+
+    /* MODAL STYLING */
+    .dept-modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); z-index: 1200; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .dept-modal-backdrop.active { display: flex; animation: fadeIn 0.25s ease; }
+    .dept-modal-card { background: white; border-radius: var(--radius-xl); width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.9); }
+
+    /* TOAST */
+    .toast-notification { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #0F172A; color: white; padding: 12px 24px; border-radius: var(--radius-full); box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px; z-index: 2000; opacity: 0; pointer-events: none; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; }
+    .toast-notification.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+
+    /* GLOBAL ONCLICK INTERACTION REINFORCEMENT */
+    [onclick] {
+      cursor: pointer !important;
+    }
+
+
+    /* FLOATING DEMO ROLE SWITCHER PILL (Subtle Bottom Left for Demo Testing) */
+    .demo-role-pill-floating {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 999;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: #94A3B8;
+      border-radius: var(--radius-full);
+      padding: 4px 6px 4px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 11.5px;
+    }
+
+    .demo-role-btn {
+      background: transparent;
+      color: #94A3B8;
+      border: none;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-family: var(--font-family);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+    .demo-role-btn:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .demo-role-btn.active {
+      background: #2563EB;
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+    .demo-role-btn.demo-admin.active {
+      background: #7C3AED;
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-section, .detail-container, .news-layout, .featured-news-card { grid-template-columns: 1fr; }
+      .quick-access-grid, .masonry-grid, .project-grid, .dash-stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .dashboard-layout { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .quick-access-grid, .masonry-grid, .project-grid, .dash-stats-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 38px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .demo-role-pill-floating { bottom: 12px; left: 12px; padding: 4px 10px; }
+    }
+    button svg, button i, a svg, a i, .btn svg, .btn i {
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Abstract Floating Liquid Shapes -->
+  <div class="bg-liquid-shapes">
+    <div class="blob blob-blue-1"></div>
+    <div class="blob blob-orange-1"></div>
+    <div class="blob blob-blue-2"></div>
+  </div>
+
+  <!-- FLOATING DEMO ROLE SWITCHER PILL (For Web Demo Testing) -->
+  <div class="demo-role-pill-floating">
+    <span style="font-weight: 700; color: #F97316; display: flex; align-items: center; gap: 4px;">
+      <i data-lucide="sparkles" style="width: 13px;"></i> Demo Roles:
+    </span>
+    <button class="demo-role-btn active" id="dr-visitor" onclick="setRole('Visitor')">👤 บุคคลทั่วไป (Default)</button>
+    <button class="demo-role-btn" id="dr-student" onclick="setRole('Student')">👨‍🎓 นักเรียน</button>
+    <button class="demo-role-btn" id="dr-teacher" onclick="setRole('Teacher')">👩‍🏫 อาจารย์</button>
+    <button class="demo-role-btn demo-admin" id="dr-admin" onclick="setRole('Admin')">🔐 แอดมิน</button>
+  </div>
+
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <div class="app-viewport-container">
+
+    <!-- FLOATING NAV BAR -->
+    <div class="navbar-container">
+      <nav class="navbar">
+        <a href="javascript:void(0)" class="nav-logo" onclick="navigateToPage('page-home'); return false;">
+          <img src="7.png" alt="KOSEN-KMITL Logo" style="height: 32px; width: auto; max-width: 32px; object-fit: contain; border-radius: 6px;">
+          <span>KOSEN-KMITL</span>
+        </a>
+        
+        <ul class="nav-links">
+          <li><button class="nav-link active" onclick="navigateToPage('page-home')" id="nl-home">หน้าแรก</button></li>
+          <li><button class="nav-link" onclick="navigateToPage('page-curriculum')" id="nl-curriculum">หลักสูตร</button></li>
+          <li><button class="nav-link" onclick="navigateToPage('page-portfolio')" id="nl-portfolio">ผลงานนักเรียน</button></li>
+          <li><button class="nav-link" onclick="navigateToPage('page-news')" id="nl-news">ข่าวสาร</button></li>
+          <li><button class="nav-link" onclick="navigateToPage('page-docs')" id="nl-docs">ดาวน์โหลดเอกสาร</button></li>
+          <li id="navAdminItem" style="display: none;">
+            <button class="nav-link admin-link" onclick="navigateToPage('page-admin')" id="nl-admin">
+              <i data-lucide="shield" style="width: 13px; vertical-align: middle;"></i> แผง Admin
+            </button>
+          </li>
+        </ul>
+
+        <div class="nav-actions">
+          <span id="userRoleBadge" class="badge-pill badge-slate">👤 บุคคลทั่วไป</span>
+          
+          <!-- Login Button (Shown when Logged Out) -->
+          <button class="btn btn-primary btn-sm" onclick="navigateToPage('page-login')" id="navLoginBtn">
+            <i data-lucide="user" style="width: 14px;"></i> เข้าสู่ระบบ
+          </button>
+
+          <!-- User Profile Avatar (Shown when Logged In) -->
+          <div id="navProfilePill" style="display: none; align-items: center; gap: 8px; cursor: pointer;" onclick="navigateToPage('page-profile')" title="ดูและจัดการโปรไฟล์">
+            <img id="navAvatarImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop" alt="User Profile Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+          </div>
+
+          <button class="mobile-menu-toggle" onclick="toggleMobileMenu()"><i data-lucide="menu"></i></button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 1. HOME PAGE                                              -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-home" class="page-view active">
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <div class="hero-text">
+          <div class="hero-badge">
+            <i data-lucide="zap" style="width: 14px;"></i> KOSEN-KMITL Liquid Glass UI
+          </div>
+          <h1 class="hero-title">
+            <span>KOSEN-KMITL</span>
+          </h1>
+          <p class="hero-subtitle">
+            สถาบันโคเซ็นแห่งแรกในประเทศไทย ณ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง (สจล.) มุ่งสร้างวิศวกรปฏิบัติด้านเทคโนโลยีและนวัตกรรมระดับโลก
+          </p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary btn-lg" onclick="navigateToPage('page-portfolio')">
+              สำรวจผลงานนักเรียน <i data-lucide="arrow-right" style="width: 18px;"></i>
+            </button>
+            <button class="btn btn-glass btn-lg" onclick="navigateToPage('page-curriculum')">
+              ดูหลักสูตรการเรียน
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-img-container">
+            <!-- Hero Image set to images (4).jpg -->
+            <img src="images (4).jpg" alt="KOSEN-KMITL Hero Image">
+          </div>
+          <div class="glass-panel floating-glass-card">
+            <div class="stat-circle"><i data-lucide="award"></i></div>
+            <div>
+              <div style="font-weight: 700; font-size: 15px; color: var(--color-slate-900);">KOSEN แห่งแรกในไทย</div>
+              <div style="font-size: 12px; color: var(--color-slate-500);">มาตรฐานการศึกษาจากประเทศญี่ปุ่น</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Access Cards -->
+      <div class="quick-access-grid">
+        <div class="glass-panel glass-panel-hover qa-card" onclick="navigateToPage('page-curriculum')">
+          <div class="qa-icon qa-icon-blue"><i data-lucide="book-open"></i></div>
+          <h3 style="font-size: 16px; font-weight: 700;">หลักสูตรวิชาการ</h3>
+          <p style="font-size: 13px; color: var(--color-slate-500);">อนุปริญญา 5 ปี และ ปริญญาตรี 2 ปี</p>
+        </div>
+        <div class="glass-panel glass-panel-hover qa-card" onclick="navigateToPage('page-portfolio')">
+          <div class="qa-icon qa-icon-orange"><i data-lucide="award"></i></div>
+          <h3 style="font-size: 16px; font-weight: 700;">คลังผลงานนักเรียน</h3>
+          <p style="font-size: 13px; color: var(--color-slate-500);">สำรวจผลงานนวัตกรรมวิศวกรรม</p>
+        </div>
+        <div class="glass-panel glass-panel-hover qa-card" onclick="navigateToPage('page-news')">
+          <div class="qa-icon qa-icon-purple"><i data-lucide="bell"></i></div>
+          <h3 style="font-size: 16px; font-weight: 700;">ประกาศข่าวสาร</h3>
+          <p style="font-size: 13px; color: var(--color-slate-500);">อัปเดตข่าวสารสำคัญของ KOSEN-KMITL</p>
+        </div>
+        <div class="glass-panel glass-panel-hover qa-card" onclick="navigateToPage('page-docs')">
+          <div class="qa-icon qa-icon-teal"><i data-lucide="file-text"></i></div>
+          <h3 style="font-size: 16px; font-weight: 700;">ศูนย์ดาวน์โหลดเอกสาร</h3>
+          <p style="font-size: 13px; color: var(--color-slate-500);">ดาวน์โหลดระเบียบการและแบบฟอร์ม</p>
+        </div>
+      </div>
+
+      <!-- Featured Student Projects -->
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2>ผลงานนักเรียนโดดเด่น</h2>
+          <p>คัดสรรผลงานนวัตกรรมชิ้นเอกจากนักเรียนผู้มีความสามารถ (จัดการปักหมุดโดย Admin)</p>
+        </div>
+        <button class="btn btn-glass btn-sm" onclick="navigateToPage('page-portfolio')">ดูผลงานทั้งหมด <i data-lucide="chevron-right"></i></button>
+      </div>
+
+      <!-- Dynamic Home Featured Grid -->
+      <div id="homeFeaturedGrid" class="project-grid">
+        <!-- Rendered Dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 2. CURRICULUM PAGE                                        -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-curriculum" class="page-view">
+      <div class="section-header" style="margin-top: 20px; flex-direction: column; align-items: flex-start; gap: 4px;">
+        <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-orange);">KOSEN-KMITL</p>
+        <h2 style="font-size: 32px; font-weight: 800; color: var(--color-slate-900);">หลักสูตรของเรา (Our Programs)</h2>
+        <p style="font-size: 15px; color: var(--color-slate-500);">สถาบันโคเซ็นแห่งแรกในประเทศไทย เปิดสอน 2 ระดับหลักสูตร</p>
+      </div>
+
+      <!-- Program Switcher -->
+      <div style="display: flex; background: rgba(241, 245, 249, 0.8); padding: 4px; border-radius: var(--radius-full); border: 1px solid rgba(226, 232, 240, 0.8); margin-bottom: 28px; max-width: 580px;">
+        <button id="prog-btn-associate" class="btn" style="flex: 1; padding: 8px 16px; border-radius: var(--radius-full); background: #0F172A; color: white; border: none; font-size: 13.5px; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" onclick="switchProgramLevel('associate')">
+          อนุปริญญาวิศวกรรมศาสตร์ (Associate)
+        </button>
+        <button id="prog-btn-bachelor" class="btn" style="flex: 1; padding: 8px 16px; border-radius: var(--radius-full); background: transparent; color: #64748B; border: none; font-size: 13.5px; font-weight: 500;" onclick="switchProgramLevel('bachelor')">
+          วิศวกรรมนวัตกรรมขั้นสูง (Bachelor)
+        </button>
+      </div>
+
+      <!-- ASSOCIATE LEVEL -->
+      <div id="prog-content-associate">
+        <div style="background: linear-gradient(135deg, #7C2D12 0%, #F97316 100%); border-radius: var(--radius-xl); margin-bottom: 24px; overflow: hidden; position: relative; min-height: 200px; box-shadow: var(--glass-shadow);">
+          <img src="student_project_3_1785907246432.jpg" alt="Associate Banner" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.22;">
+          <div style="position: relative; z-index: 1; padding: 32px; color: white;">
+            <span style="background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); font-size: 12px; font-weight: 700; padding: 5px 16px; border-radius: var(--radius-full); letter-spacing: 0.05em;">
+              5 ปี · ระบบโคเซ็น (ญี่ปุ่น)
+            </span>
+            <h3 style="font-size: 24px; font-weight: 800; margin: 14px 0 8px 0;">หลักสูตรอนุปริญญาวิศวกรรมศาสตร์</h3>
+            <p style="font-size: 14px; opacity: 0.9; line-height: 1.7; margin-bottom: 20px; max-width: 680px;">
+              หลักสูตรปฏิบัติการ 5 ปี ตามแบบฉบับ KOSEN ประเทศญี่ปุ่น เน้นทักษะวิศวกรรมในโลกจริง การเรียนรู้จากโปรเจกต์ และการแก้ไขปัญหาเชิงปฏิบัติ รับหลังจบ ม.3
+            </p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <span style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); font-size: 12px; font-weight: 600; padding: 4px 14px; border-radius: var(--radius-full);">5 ปี</span>
+              <span style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); font-size: 12px; font-weight: 600; padding: 4px 14px; border-radius: var(--radius-full);">อนุปริญญา</span>
+              <span style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); font-size: 12px; font-weight: 600; padding: 4px 14px; border-radius: var(--radius-full);">รับหลัง ม.3</span>
+              <span style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); font-size: 12px; font-weight: 600; padding: 4px 14px; border-radius: var(--radius-full);">ระบบโคเซ็น</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <p style="font-size: 12px; font-weight: 700; color: var(--color-slate-400); text-transform: uppercase; letter-spacing: 0.08em;">
+            เลือกสาขาวิชาเพื่อดูข้อมูลหลักสูตรแบบเจาะลึก
+          </p>
+          <button id="adminCurriculumEditBtn" class="btn btn-purple btn-sm" style="display: none;" onclick="navigateToPage('page-admin'); switchAdminTab('curriculum');">
+            <i data-lucide="edit"></i> แก้ไขหลักสูตร (Admin)
+          </button>
+        </div>
+
+        <!-- 3 Departments Grid -->
+        <div class="curriculum-grid" style="margin-bottom: 28px;">
+          <!-- CS -->
+          <div class="glass-panel glass-panel-hover" style="padding: 20px; display: flex; flex-direction: column; cursor: pointer;" onclick="openDeptModal('cs')">
+            <div style="width: 100%; height: 160px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 14px;">
+              <img src="ce.webp" alt="Computer Engineering" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <h3 id="curric-title-cs" style="font-size: 18px; font-weight: 700; color: var(--color-slate-900); margin-bottom: 6px;">วิศวกรรมคอมพิวเตอร์</h3>
+            <p style="font-size: 12px; color: var(--color-slate-400); margin-bottom: 10px; font-weight: 600;">Computer Engineering</p>
+            <p id="curric-desc-cs" style="font-size: 13px; color: var(--color-slate-600); line-height: 1.6; margin-bottom: 16px; flex-grow: 1;">
+              ออกแบบ พัฒนา และแก้ปัญหาระบบคอมพิวเตอร์ครบทุกด้าน รวมถึง AI, IoT และ Cyber Security
+            </p>
+            <button class="btn btn-sm" style="background: #FFF7ED; color: #F97316; border: none; border-radius: var(--radius-full); font-weight: 700; align-self: flex-start;" onclick="event.stopPropagation(); openDeptModal('cs');">
+              อ่านต่อ ›
+            </button>
+          </div>
+
+          <!-- EE -->
+          <div class="glass-panel glass-panel-hover" style="padding: 20px; display: flex; flex-direction: column; cursor: pointer;" onclick="openDeptModal('ee')">
+            <div style="width: 100%; height: 160px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 14px;">
+              <img src="ece.webp" alt="Electrical Engineering" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <h3 id="curric-title-ee" style="font-size: 18px; font-weight: 700; color: var(--color-slate-900); margin-bottom: 6px;">วิศวกรรมไฟฟ้าและอิเล็กทรอนิกส์</h3>
+            <p style="font-size: 12px; color: var(--color-slate-400); margin-bottom: 10px; font-weight: 600;">Electrical & Electronics Engineering</p>
+            <p id="curric-desc-ee" style="font-size: 13px; color: var(--color-slate-600); line-height: 1.6; margin-bottom: 16px; flex-grow: 1;">
+              รวมศาสตร์ไฟฟ้าและอิเล็กทรอนิกส์ พร้อมพลังงานสะอาดเพื่อเทคโนโลยีโลก
+            </p>
+            <button class="btn btn-sm" style="background: #FEFCE8; color: #CA8A04; border: none; border-radius: var(--radius-full); font-weight: 700; align-self: flex-start;" onclick="event.stopPropagation(); openDeptModal('ee');">
+              อ่านต่อ ›
+            </button>
+          </div>
+
+          <!-- ME -->
+          <div class="glass-panel glass-panel-hover" style="padding: 20px; display: flex; flex-direction: column; cursor: pointer;" onclick="openDeptModal('me')">
+            <div style="width: 100%; height: 160px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 14px;">
+              <img src="Me.webp" alt="Mechatronics Engineering" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <h3 id="curric-title-me" style="font-size: 18px; font-weight: 700; color: var(--color-slate-900); margin-bottom: 6px;">วิศวกรรมแมคคาทรอนิกส์</h3>
+            <p style="font-size: 12px; color: var(--color-slate-400); margin-bottom: 10px; font-weight: 600;">Mechatronics Engineering</p>
+            <p id="curric-desc-me" style="font-size: 13px; color: var(--color-slate-600); line-height: 1.6; margin-bottom: 16px; flex-grow: 1;">
+              ผสมผสานวิศวกรรมเครื่องกล ไฟฟ้า และคอมพิวเตอร์ สร้างหุ่นยนต์และระบบอัตโนมัติ
+            </p>
+            <button class="btn btn-sm" style="background: #F0FDF4; color: #16A34A; border: none; border-radius: var(--radius-full); font-weight: 700; align-self: flex-start;" onclick="event.stopPropagation(); openDeptModal('me');">
+              อ่านต่อ ›
+            </button>
+          </div>
+        </div>
+
+        <!-- Pathway Note -->
+        <div class="glass-panel" style="padding: 24px;">
+          <p style="font-size: 12px; font-weight: 700; color: var(--color-slate-400); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
+            เส้นทางหลังสำเร็จการศึกษา
+          </p>
+          <p style="font-size: 14px; line-height: 1.7; color: var(--color-slate-700);">
+            ผู้สำเร็จการศึกษาสามารถต่อยอดสู่หลักสูตรปริญญาตรีวิศวกรรมนวัตกรรมขั้นสูง (ต่อเนื่อง) ของ KOSEN-KMITL หรือเข้าสู่อุตสาหกรรมได้ทันที และมีโอกาสแลกเปลี่ยนกับสถาบันโคเซ็นในญี่ปุ่น
+          </p>
+        </div>
+      </div>
+
+      <!-- BACHELOR LEVEL -->
+      <div id="prog-content-bachelor" style="display: none;">
+        <div style="background: linear-gradient(135deg, #0D1B2A 0%, #1E3A5F 100%); border-radius: var(--radius-xl); margin-bottom: 24px; overflow: hidden; position: relative; min-height: 200px; box-shadow: var(--glass-shadow);">
+          <img src="student_project_2_1785907221524.jpg" alt="Bachelor Banner" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3;">
+          <div style="position: relative; z-index: 1; padding: 32px; color: white;">
+            <span style="background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); font-size: 12px; font-weight: 700; padding: 5px 16px; border-radius: var(--radius-full); letter-spacing: 0.05em;">
+              ปริญญาตรี (ต่อเนื่อง) 2 ปี
+            </span>
+            <h3 style="font-size: 24px; font-weight: 800; margin: 14px 0 4px 0;">วิศวกรรมนวัตกรรมขั้นสูง</h3>
+            <p style="font-size: 14px; opacity: 0.8; font-weight: 600; margin-bottom: 12px;">หลักสูตรปริญญาตรีวิศวกรรมศาสตร์</p>
+            <p style="font-size: 14px; opacity: 0.9; line-height: 1.7; margin-bottom: 20px; max-width: 680px;">
+              หลักสูตรปริญญาตรีวิศวกรรมศาสตร์ของสถาบันโคเซ็นแห่ง สจล. วิศวกรรมนวัตกรรมขั้นสูง (ต่อเนื่อง) 2 ปี โดยเน้นเนื้อหาต่อยอดจากระดับอนุปริญญา...
+            </p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+          <div class="glass-panel" style="padding: 24px;">
+            <div style="font-size: 14px; font-weight: 700; color: var(--color-slate-900); margin-bottom: 6px;">รูปแบบที่ 1</div>
+            <div style="font-size: 14px; font-weight: 700; color: var(--color-orange); margin-bottom: 10px;">ได้รับทุนการศึกษา</div>
+            <p style="font-size: 14px; color: var(--color-slate-600); line-height: 1.65;">
+              นักศึกษาที่ผ่านการคัดเลือกจะได้รับทุนการศึกษา พร้อมทำงานกับบริษัทพาร์ทเนอร์ควบคู่การเรียน
+            </p>
+          </div>
+
+          <div class="glass-panel" style="padding: 24px;">
+            <div style="font-size: 14px; font-weight: 700; color: var(--color-slate-900); margin-bottom: 6px;">รูปแบบที่ 2</div>
+            <div style="font-size: 14px; font-weight: 700; color: var(--color-royal-blue); margin-bottom: 10px;">เรียนระหว่างทำงาน</div>
+            <p style="font-size: 14px; color: var(--color-slate-600); line-height: 1.65;">
+              เหมาะสำหรับผู้ที่ทำงานในสาขาวิศวกรรมอยู่แล้ว และต้องการยกระดับวุฒิเป็นระดับปริญญาตรี
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 3. STUDENT PORTFOLIO PAGE                                 -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-portfolio" class="page-view">
+      <div class="section-header" style="margin-top: 20px;">
+        <div class="section-title-group">
+          <h2>คลังผลงานนักเรียน (Portfolio Showcase)</h2>
+          <p>ค้นพบผลงานวิจัย ปริญญานิพนธ์ และต้นแบบนวัตกรรมของนักเรียน KOSEN-KMITL</p>
+        </div>
+        <button id="adminPendingNoticeBtn" class="btn btn-purple btn-sm" style="display: none;" onclick="navigateToPage('page-admin'); switchAdminTab('approvals');">
+          <i data-lucide="clock"></i> มีคำขอรออนุมัติ (<span id="pendingCountBadge">2</span>)
+        </button>
+      </div>
+
+      <!-- Department Category Filter Pills -->
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+        <button class="preset-pill" id="filter-all" style="background: var(--color-royal-blue); color: #FFFFFF;" onclick="filterPortfolio('all')">🌐 ทั้งหมด</button>
+        <button class="preset-pill" id="filter-cs" onclick="filterPortfolio('วิศวกรรมคอมพิวเตอร์')">💻 วิศวกรรมคอมพิวเตอร์</button>
+        <button class="preset-pill" id="filter-ee" onclick="filterPortfolio('วิศวกรรมไฟฟ้า')">⚡ วิศวกรรมไฟฟ้า</button>
+        <button class="preset-pill" id="filter-me" onclick="filterPortfolio('วิศวกรรมแมคคาทรอนิกส์')">🤖 วิศวกรรมแมคคาทรอนิกส์</button>
+      </div>
+
+      <!-- Loading State Skeletons (Automated on load) -->
+      <div id="portfolioLoading" class="masonry-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <!-- Dynamic Gallery Grid -->
+      <div id="portfolioGrid" class="masonry-grid" style="display: none;">
+        <!-- Rendered Dynamically by JS -->
+      </div>
+
+      <!-- Empty State Container -->
+      <div id="portfolioEmpty" class="glass-panel empty-state" style="display: none;">
+        <div class="empty-icon"><i data-lucide="folder-search" style="width: 36px;"></i></div>
+        <h3 style="font-size: 20px; font-weight: 700;">ไม่พบข้อมูลผลงาน</h3>
+        <p style="color: var(--color-slate-500); max-width: 400px;">ขณะนี้ยังไม่มีผลงานในระบบ</p>
+        <button class="btn btn-primary" onclick="navigateToPage('page-upload')">+ โพสต์ผลงานใหม่</button>
+      </div>
+
+      <!-- Floating Post Button -->
+      <button id="floatingPostBtn" class="btn btn-orange btn-lg floating-post-btn" style="display: none;" onclick="navigateToPage('page-upload')">
+        <i data-lucide="plus-circle" style="width: 20px;"></i> โพสต์ผลงานใหม่
+      </button>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 4. PROJECT DETAIL PAGE                                    -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-detail" class="page-view">
+      <div style="margin-bottom: 20px;">
+        <button class="btn btn-glass btn-sm" onclick="navigateToPage('page-portfolio')"><i data-lucide="arrow-left"></i> ย้อนกลับไปหน้าคลังผลงาน</button>
+      </div>
+
+      <div class="detail-container">
+        <div>
+          <div class="carousel-main">
+            <img id="detailMainImg" src="student_project_4_1785907257636.jpg" alt="Main Project Preview">
+          </div>
+
+
+
+          <h1 id="detailProjectTitle" style="font-size: 32px; font-weight: 800; color: var(--color-slate-900); margin-bottom: 12px;">มือเทียมไบโอนิคเพื่อการแพทย์ v4 (Bionic Prosthetic)</h1>
+          
+          <div class="tech-stack-group">
+            <span class="tech-pill">Bionics</span>
+            <span class="tech-pill">Robotics</span>
+            <span class="tech-pill">Sensors</span>
+            <span class="tech-pill">Embedded Systems</span>
+          </div>
+
+          <div class="glass-panel" style="padding: 28px; margin-bottom: 32px;">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 12px;">ภาพรวมและวัตถุประสงค์โครงการ</h3>
+            <p id="detailProjectDesc" style="font-size: 15px; color: var(--color-slate-700); line-height: 1.7; margin-bottom: 16px;">
+              มือเทียมไบโอนิคความแม่นยำสูง ควบคุมด้วยสัญญาณกล้ามเนื้อ EMG และอัลกอริทึมปัญญาประดิษฐ์เพื่อช่วยผู้พิการทางร่างกาย ออกแบบและพัฒนาโดยนักเรียนวิศวกรรมแมคคาทรอนิกส์ KOSEN-KMITL
+            </p>
+
+            <!-- Media / Attached Assets Section -->
+            <div id="detailProjectAssets" style="margin-top: 20px; display: flex; flex-direction: column; gap: 20px; border-top: 1px dashed var(--color-slate-300); padding-top: 20px;">
+              <h4 style="font-size: 16px; font-weight: 700; color: var(--color-slate-900); display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="folder-git-2" style="color: var(--color-royal-blue);"></i> สื่อการนำเสนอ สื่อวิดีโอ ลิงก์เว็บ และซอร์สโค้ด (Attached Assets)
+              </h4>
+
+              <!-- 1. Web Link -->
+              <div id="detailWebLinkBox" style="display: flex; align-items: center; justify-content: space-between; background: rgba(37,99,235,0.06); padding: 14px 18px; border-radius: var(--radius-lg); border: 1px solid rgba(37,99,235,0.2);">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--color-royal-blue); color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i data-lucide="globe" style="width: 18px;"></i>
+                  </div>
+                  <div>
+                    <div style="font-weight: 700; font-size: 14px; color: var(--color-slate-900);">ลิงก์เว็บไซต์ / Repository โครงงาน</div>
+                    <a id="detailWebLinkUrl" href="https://github.com/kosen-kmitl/bionic-hand-v4" target="_blank" style="font-size: 13px; color: var(--color-royal-blue); word-break: break-all;">https://github.com/kosen-kmitl/bionic-hand-v4</a>
+                  </div>
+                </div>
+                <a id="detailWebLinkBtn" href="https://github.com/kosen-kmitl/bionic-hand-v4" target="_blank" class="btn btn-primary btn-sm">เปิดลิงก์ &rarr;</a>
+              </div>
+
+              <!-- 2. Video Box -->
+              <div id="detailVideoBox">
+                <h5 style="font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--color-slate-800); display: flex; align-items: center; gap: 6px;">
+                  <i data-lucide="video" style="color: var(--color-orange); width: 16px;"></i> วิดีโอสาธิตการทำงาน (Demo Video)
+                </h5>
+                <div style="position: relative; padding-bottom: 52%; height: 0; overflow: hidden; border-radius: var(--radius-lg); background: #0F172A; box-shadow: var(--glass-shadow);">
+                  <iframe id="detailVideoIframe" style="position: absolute; top:0; left:0; width:100%; height:100%; border:0;" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                </div>
+              </div>
+
+              <!-- 3. Code File Box -->
+              <div id="detailCodeBox">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                  <h5 style="font-size: 14px; font-weight: 700; color: var(--color-slate-800); display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="file-code" style="color: var(--color-purple); width: 16px;"></i> ไฟล์โค้ดโปรเจกต์ (Attached Code File)
+                    <span id="detailCodeFileName" class="badge-pill badge-purple" style="font-family: monospace; font-size: 11px;">📄 main.c</span>
+                  </h5>
+                  <button class="btn btn-glass btn-sm" onclick="downloadAttachedCodeFile()"><i data-lucide="download" style="width: 14px;"></i> ดาวน์โหลดไฟล์โค้ด</button>
+                </div>
+                <pre style="background: #0F172A; color: #E2E8F0; padding: 18px; border-radius: var(--radius-lg); overflow-x: auto; font-family: monospace; font-size: 13px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.1);"><code id="detailCodeSnippet">// EMG Signal Classifier - KOSEN-KMITL Bionic Hand (.c / .py / .html)
+#include <ESP32Servo.h>
+Servo thumb, indexPin, middlePin;
+
+void setup() {
+  Serial.begin(115200);
+  thumb.attach(18);
+  indexPin.attach(19);
+}
+
+void loop() {
+  int emgVal = analogRead(34);
+  if (emgVal > 1500) {
+    thumb.write(90); // Grip gesture
+  } else {
+    thumb.write(0);  // Relaxed gesture
+  }
+  delay(20);
+}</code></pre>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 16px; margin-top: 24px;">
+              <button class="btn btn-primary" onclick="showToast('กำลังดาวน์โหลดเอกสารสรุปโครงการ (PDF)...')">
+                <i data-lucide="download"></i> ดาวน์โหลดเอกสารสรุป (PDF - 4.2 MB)
+              </button>
+              <a href="http://www.kosen.kmitl.ac.th" target="_blank" class="btn btn-glass">
+                <i data-lucide="globe"></i> เว็บไซต์ KOSEN-KMITL
+              </a>
+            </div>
+          </div>
+
+          <!-- Comments Section -->
+          <div class="glass-panel comments-box">
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="message-square" style="color: var(--color-royal-blue);"></i> ความคิดเห็นและการประเมิน (3)
+            </h3>
+
+            <div id="commentList">
+              <div class="comment-item">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop" class="avatar">
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">ศ. มาร์คัส แวนซ์ &bull; <span style="color: var(--color-slate-400); font-weight: 400;">2 ชั่วโมงที่แล้ว</span></div>
+                  <p style="font-size: 14px; color: var(--color-slate-700); margin-top: 4px;">การตอบสนองของ Servo Motor และการกรองสัญญาณ EMG ทำได้นุ่มนวลและแม่นยำมากครับ!</p>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;">
+              <textarea id="commentInput" class="input-field" rows="3" placeholder="เขียนข้อเสนอแนะหรือความคิดเห็นเชิงสร้างสรรค์..."></textarea>
+              <button class="btn btn-primary btn-sm" style="align-self: flex-end;" onclick="postComment()">ส่งความคิดเห็น</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <div class="glass-panel" style="padding: 24px;">
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">นักเรียนผู้สร้างสรรค์</h3>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop" style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover;">
+              <div>
+                <div id="detailAuthorName" style="font-weight: 700; font-size: 16px;">เลียม ธอร์น</div>
+                <div id="detailAuthorDept" style="font-size: 13px; color: var(--color-slate-500);">วิศวกรรมแมคคาทรอนิกส์ รุ่น 68</div>
+              </div>
+            </div>
+            <button class="btn btn-outline btn-sm" style="width: 100%;" onclick="showToast('ติดตามเลียม ธอร์น เรียบร้อยแล้ว!')">+ ติดตามผู้สร้าง</button>
+          </div>
+
+          <div class="glass-panel" style="padding: 24px;">
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">สถิติผลงาน</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--color-slate-500);">ชื่นชอบ:</span> <strong id="detailLikes">412 คน</strong></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--color-slate-500);">การเข้าชม:</span> <strong>3,900 ครั้ง</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 5. NEWS PAGE                                              -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-news" class="page-view">
+      <div class="section-header" style="margin-top: 20px;">
+        <div class="section-title-group">
+          <h2>ข่าวสารและประกาศ KOSEN-KMITL</h2>
+          <p>อัปเดตข่าวสารทางการ กิจกรรมแคมปัส และความสำเร็จวิชาการ</p>
+        </div>
+        <button id="adminAddNewsBtn" class="btn btn-purple" style="display: none;" onclick="openAddNewsModal()">
+          <i data-lucide="plus-circle"></i> โพสต์ข่าวสารใหม่ (Admin)
+        </button>
+      </div>
+
+      <div class="news-layout">
+        <div id="newsCardsContainer">
+          <!-- Rendered Dynamically by JS -->
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <div class="glass-panel" style="padding: 24px;">
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">กิจกรรมที่กำลังจะมาถึง</h3>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 14px; font-size: 14px;">
+              <li style="border-left: 3px solid var(--color-royal-blue); padding-left: 10px;">
+                <strong>12 ส.ค.:</strong> KOSEN Hackathon Kickoff
+              </li>
+              <li style="border-left: 3px solid var(--color-orange); padding-left: 10px;">
+                <strong>18 ส.ค.:</strong> Senior Engineering Capstone Showcase
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 6. DOCUMENTS PAGE                                         -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-docs" class="page-view">
+      <div class="section-header" style="margin-top: 20px;">
+        <div class="section-title-group">
+          <h2>ศูนย์ดาวน์โหลดเอกสารวิชาการ KOSEN-KMITL</h2>
+          <p>เข้าถึงแบบฟอร์มทางการ คู่มือนักศึกษา และระเบียบการเรียนรู้</p>
+        </div>
+        <button id="adminAddDocBtn" class="btn btn-purple" style="display: none;" onclick="openAddDocModal()">
+          <i data-lucide="file-plus"></i> เพิ่มเอกสารใหม่ (Admin)
+        </button>
+      </div>
+
+      <table class="doc-table">
+        <tbody id="docsTableBody">
+          <!-- Rendered Dynamically by JS -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 7. LOGIN PAGE                                             -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-login" class="page-view">
+      <div class="auth-wrapper">
+        <div class="glass-panel auth-card">
+          <div class="auth-header">
+            <img src="7.png" alt="KOSEN-KMITL Logo" style="height: 48px; width: auto; margin: 0 auto 12px auto; display: block; object-fit: contain; border-radius: var(--radius-md);">
+            <h2>เข้าสู่ระบบ KOSEN-KMITL</h2>
+            <p style="font-size: 13px; color: var(--color-slate-500); margin-top: 4px;">เข้าสู่ระบบด้วย Gmail หรืออีเมลสถาบันผ่านระบบ Supabase Auth</p>
+          </div>
+
+          <form onsubmit="event.preventDefault(); loginUserWithSupabase();" style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="input-group">
+              <label class="input-label" for="loginEmailInput">อีเมล / Gmail / รหัสนักศึกษา</label>
+              <input id="loginEmailInput" type="email" class="input-field" placeholder="เช่น user@gmail.com หรือ 67010xxx@kmitl.ac.th" required autocomplete="email">
+            </div>
+
+            <div class="input-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label class="input-label" for="loginPassInput">รหัสผ่าน (Password)</label>
+                <a href="javascript:void(0)" onclick="showToast('💡 สามารถทดสอบเข้าสู่ระบบได้ด้วยปุ่ม 1-Click Demo ด้านล่าง')" style="font-size: 11.5px; color: var(--color-royal-blue); text-decoration: none;">ตัวอย่างรหัสผ่าน?</a>
+              </div>
+              <div style="position: relative;">
+                <input id="loginPassInput" type="password" class="input-field" placeholder="กรอกรหัสผ่านของคุณ..." required autocomplete="current-password" style="padding-right: 40px;">
+                <button type="button" onclick="togglePassVisibility('loginPassInput', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: var(--color-slate-400); display: flex; align-items: center;">
+                  <i data-lucide="eye" style="width: 16px;"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Email Role Preset Helpers -->
+            <div class="preset-pill-group" style="background: rgba(241, 245, 249, 0.6); padding: 10px 12px; border-radius: var(--radius-md); border: 1px solid rgba(226, 232, 240, 0.8);">
+              <span style="font-size: 11px; color: var(--color-slate-500); width: 100%; font-weight: 600; margin-bottom: 4px; display: block;">⚡ ตัวเลือกบัญชีทดสอบด่วน (1-Click Demo):</span>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button type="button" class="preset-pill" onclick="setEmailPreset('student@kosen.kmitl.ac.th', 'kosen123456')">👨‍🎓 นักเรียน (Student)</button>
+                <button type="button" class="preset-pill" onclick="setEmailPreset('teacher@kosen.kmitl.ac.th', 'kosen123456')">👩‍🏫 อาจารย์ (Teacher)</button>
+                <button type="button" class="preset-pill" style="background: #F5F3FF; color: #7C3AED; border-color: #EDE9FE;" onclick="setEmailPreset('admin@kosen.kmitl.ac.th', 'admin123456')">🔐 แอดมิน (Admin)</button>
+              </div>
+            </div>
+
+            <button type="submit" id="loginSubmitBtn" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 4px;">
+              <i data-lucide="log-in" style="width: 16px;"></i> เข้าสู่ระบบ (Sign In)
+            </button>
+          </form>
+
+
+
+          <div style="text-align: center; font-size: 13px; color: var(--color-slate-500); margin-top: 6px;">
+            ยังไม่มีบัญชีนักเรียนหรืออาจารย์? <a href="javascript:void(0)" style="color: var(--color-royal-blue); font-weight: 600;" onclick="navigateToPage('page-register'); return false;">สมัครสมาชิกที่นี่</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 8. REGISTER PAGE                                          -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-register" class="page-view">
+      <div class="auth-wrapper">
+        <div class="glass-panel auth-card" style="max-width: 540px;">
+          <div class="auth-header">
+            <img src="7.png" alt="KOSEN-KMITL Logo" style="height: 44px; width: auto; margin: 0 auto 10px auto; display: block; object-fit: contain; border-radius: var(--radius-md);">
+            <h2>สมัครสมาชิก KOSEN-KMITL</h2>
+            <p style="font-size: 13.5px; color: var(--color-slate-500); margin-top: 4px;">สร้างบัญชีผู้ใช้งานเพื่อเผยแพร่ผลงานและเชื่อมต่อฐานข้อมูล Supabase</p>
+          </div>
+
+          <form onsubmit="event.preventDefault(); registerNewUser();" style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="input-group">
+              <label class="input-label" for="regFullNameInput">ชื่อ-นามสกุล (Full Name) *</label>
+              <input id="regFullNameInput" type="text" class="input-field" placeholder="เช่น นายณัฐพงษ์ สุขเจริญ หรือ Alex Chen" required>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label" for="regEmailInput">อีเมล / Gmail (Email Address) *</label>
+              <input id="regEmailInput" type="email" class="input-field" placeholder="เช่น your.name@gmail.com หรือ 67010xxx@kmitl.ac.th" required autocomplete="email">
+              <span style="font-size: 11.5px; color: var(--color-slate-500);">สามารถใช้ได้ทั้ง Gmail ทั่วไป หรืออีเมลสถาบัน @kmitl.ac.th</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="input-group">
+                <label class="input-label" for="regPassInput">รหัสผ่าน (Password) *</label>
+                <div style="position: relative;">
+                  <input id="regPassInput" type="password" class="input-field" placeholder="อย่างน้อย 6 ตัวอักษร" required autocomplete="new-password" style="padding-right: 36px;">
+                  <button type="button" onclick="togglePassVisibility('regPassInput', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: var(--color-slate-400);">
+                    <i data-lucide="eye" style="width: 15px;"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label" for="regConfirmPassInput">ยืนยันรหัสผ่าน *</label>
+                <div style="position: relative;">
+                  <input id="regConfirmPassInput" type="password" class="input-field" placeholder="กรอกรหัสผ่านอีกครั้ง" required autocomplete="new-password" style="padding-right: 36px;">
+                  <button type="button" onclick="togglePassVisibility('regConfirmPassInput', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: var(--color-slate-400);">
+                    <i data-lucide="eye" style="width: 15px;"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="input-group">
+                <label class="input-label" for="regRoleSelect">สถานะ / สิทธิ์ในระบบ *</label>
+                <select id="regRoleSelect" class="input-field" onchange="handleRegRoleChange()">
+                  <option value="Student">👨‍🎓 นักเรียน / นักศึกษา (Student)</option>
+                  <option value="Teacher">👩‍🏫 อาจารย์ / ที่ปรึกษา (Teacher)</option>
+                  <option value="Visitor">👤 บุคคลทั่วไป (Visitor)</option>
+                </select>
+              </div>
+              <div class="input-group" id="regDeptGroup">
+                <label class="input-label" for="regDeptSelect">สาขาวิชา</label>
+                <select id="regDeptSelect" class="input-field">
+                  <option value="วิศวกรรมคอมพิวเตอร์">💻 วิศวกรรมคอมพิวเตอร์</option>
+                  <option value="วิศวกรรมไฟฟ้าและอิเล็กทรอนิกส์">⚡ วิศวกรรมไฟฟ้าและอิเล็กทรอนิกส์</option>
+                  <option value="วิศวกรรมแมคคาทรอนิกส์">🤖 วิศวกรรมแมคคาทรอนิกส์</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="input-group" id="regGenGroup">
+              <label class="input-label" for="regGenInput">รหัสนักศึกษา / รุ่น (ถ้ามี)</label>
+              <input id="regGenInput" type="text" class="input-field" placeholder="เช่น 67010234 หรือ KOSEN รุ่น 6">
+            </div>
+
+            <button type="submit" id="regSubmitBtn" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 6px;">
+              <i data-lucide="user-plus" style="width: 16px;"></i> ยืนยันการสมัครสมาชิก (Create Account)
+            </button>
+          </form>
+
+          <div style="text-align: center; font-size: 13px; color: var(--color-slate-500); margin-top: 8px;">
+            มีบัญชีอยู่แล้ว? <a href="javascript:void(0)" style="color: var(--color-royal-blue); font-weight: 600;" onclick="navigateToPage('page-login'); return false;">เข้าสู่ระบบที่นี่</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 8.5 USER PROFILE PAGE                                     -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-profile" class="page-view">
+      <div class="section-header" style="margin-top: 20px;">
+        <div class="section-title-group">
+          <h2>โปรไฟล์ของฉัน (User Profile)</h2>
+          <p>จัดการข้อมูลส่วนตัว เปลี่ยนรูปโปรไฟล์ และสิทธิ์การเข้าถึงระบบ</p>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="max-width: 620px; margin: 0 auto; padding: 36px; display: flex; flex-direction: column; align-items: center; gap: 24px;">
+        <!-- Avatar Display & Change -->
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
+          <img id="profileLargeAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop" alt="Profile Large" style="width: 124px; height: 124px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 15px 35px rgba(37,99,235,0.25);">
+          
+          <label class="btn btn-glass btn-sm" style="margin-top: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+            <i data-lucide="camera" style="width: 16px; color: var(--color-royal-blue);"></i> อัปโหลดเปลี่ยนรูปโปรไฟล์
+            <input type="file" accept="image/*" style="display: none;" onchange="handleProfileAvatarUpload(event)">
+          </label>
+
+          <!-- Preset Avatars Quick Choice -->
+          <div style="margin-top: 12px; display: flex; gap: 8px; align-items: center;">
+            <span style="font-size: 11px; color: var(--color-slate-500); font-weight: 500;">หรือเลือกรูปตัวอย่าง:</span>
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop" style="width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.15);" onclick="changeUserAvatar(this.src)">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop" style="width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.15);" onclick="changeUserAvatar(this.src)">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop" style="width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.15);" onclick="changeUserAvatar(this.src)">
+          </div>
+        </div>
+
+        <!-- Profile Information Fields -->
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 16px;">
+          <div class="input-group">
+            <label class="input-label">ชื่อ-นามสกุล (Full Name)</label>
+            <input id="profileNameInput" type="text" class="input-field" value="ณัฐพงษ์ สุขเจริญ">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="input-group">
+              <label class="input-label">สิทธิ์ในระบบ</label>
+              <input id="profileRoleDisplay" type="text" class="input-field" value="นักเรียน (Student)" readonly style="background: #F1F5F9; font-weight: 600; color: var(--color-royal-blue);">
+            </div>
+            <div class="input-group">
+              <label class="input-label">สาขาวิชา</label>
+              <input id="profileDeptDisplay" type="text" class="input-field" value="วิศวกรรมคอมพิวเตอร์">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">อีเมลสถาบัน (Institutional Email)</label>
+            <input id="profileEmailDisplay" type="email" class="input-field" value="student@kosen.kmitl.ac.th" readonly style="background: #F1F5F9; color: var(--color-slate-500); cursor: not-allowed;">
+          </div>
+
+          <button class="btn btn-primary btn-sm" style="align-self: flex-end;" onclick="saveProfileInfo()">บันทึกข้อมูลส่วนตัว</button>
+        </div>
+
+        <!-- Logout Section -->
+        <div style="width: 100%; border-top: 1px solid var(--color-slate-200); padding-top: 24px; margin-top: 8px;">
+          <button class="btn btn-red btn-lg" style="width: 100%; justify-content: center; box-shadow: 0 8px 20px rgba(239,68,68,0.25);" onclick="logoutUser()">
+            <i data-lucide="log-out" style="width: 18px;"></i> ออกจากระบบ (Logout)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 9. DASHBOARD                                              -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-dashboard" class="page-view">
+      <div class="section-header" style="margin-top: 20px;">
+        <div class="section-title-group"><h2>แดชบอร์ดนักเรียน (KOSEN-KMITL)</h2><p>จัดการผลงานที่เผยแพร่และสถิติผู้เข้าชม</p></div>
+        <button class="btn btn-orange" onclick="navigateToPage('page-upload')"><i data-lucide="plus"></i> อัปโหลดผลงานใหม่</button>
+      </div>
+      <div class="dashboard-layout">
+        <div class="glass-panel dash-sidebar">
+          <a class="dash-nav-item active"><i data-lucide="layout-dashboard"></i> ภาพรวมแดชบอร์ด</a>
+          <a class="dash-nav-item"><i data-lucide="folder"></i> ผลงานของฉัน (3)</a>
+        </div>
+        <div>
+          <div class="dash-stats-grid">
+            <div class="glass-panel dash-stat-card"><span style="font-size: 12px; color: var(--color-slate-500);">ยอดไลก์รวม</span><div style="font-size: 28px; font-weight: 800; color: var(--color-royal-blue);">1,420</div></div>
+            <div class="glass-panel dash-stat-card"><span style="font-size: 12px; color: var(--color-slate-500);">การเข้าชมผลงาน</span><div style="font-size: 28px; font-weight: 800; color: var(--color-orange);">12.8k</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 10. UPLOAD PAGE                                          -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-upload" class="page-view">
+      <div class="section-header" style="margin-top: 20px;">
+        <div class="section-title-group"><h2>อัปโหลดผลงานใหม่</h2><p>ส่งผลงานนวัตกรรม KOSEN-KMITL ของคุณ</p></div>
+      </div>
+      <div class="glass-panel" style="padding: 32px; max-width: 800px; margin: 0 auto;">
+        <div class="dropzone" onclick="showToast('เปิดเลือกไฟล์รูปภาพแล้ว')">
+          <i data-lucide="upload-cloud" style="width: 48px; height: 48px; color: var(--color-royal-blue); margin-bottom: 12px;"></i>
+          <h4 style="font-size: 16px; font-weight: 700;">ลากและวางรูปภาพปกหรือสไลด์ผลงานที่นี่</h4>
+        </div>
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+          <div class="input-group"><label class="input-label">ชื่อผลงาน</label><input id="uploadTitle" type="text" class="input-field" placeholder="เช่น หุ่นยนต์บริการทางการแพทย์"></div>
+          <div class="input-group"><label class="input-label">สาขาวิชา</label>
+            <select id="uploadDept" class="input-field">
+              <option value="วิศวกรรมคอมพิวเตอร์">วิศวกรรมคอมพิวเตอร์</option>
+              <option value="วิศวกรรมไฟฟ้า">วิศวกรรมไฟฟ้าและอิเล็กทรอนิกส์</option>
+              <option value="วิศวกรรมแมคคาทรอนิกส์">วิศวกรรมแมคคาทรอนิกส์</option>
+            </select>
+          </div>
+          <div class="input-group"><label class="input-label">ชื่อนักเรียนผู้สร้าง</label><input id="uploadStudent" type="text" class="input-field" value="ณัฐพงษ์ สุขเจริญ (ชั้นปี 4)"></div>
+          <div class="input-group"><label class="input-label">รายละเอียดผลงาน</label><textarea id="uploadDesc" class="input-field" rows="3" placeholder="อธิบายโจทย์ สถาปัตยกรรมเทคโนโลยี..."></textarea></div>
+
+          <div style="border-top: 1px dashed var(--color-slate-300); padding-top: 16px; margin-top: 8px;">
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--color-slate-900); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="paperclip" style="color: var(--color-royal-blue);"></i> แนบสื่อ สื่อวิดีโอ ลิงก์เว็บ และโค้ดโปรเจกต์ (Project Assets)
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="input-group">
+                <label class="input-label" style="display: flex; align-items: center; gap: 6px;">
+                  <i data-lucide="globe" style="width: 14px; color: var(--color-royal-blue);"></i> ลิงก์เว็บไซต์ / Live Demo / Repository URL
+                </label>
+                <input id="uploadWebLink" type="url" class="input-field" placeholder="เช่น https://github.com/kosen-kmitl/my-project หรือ https://my-demo-app.com">
+              </div>
+
+              <div class="input-group">
+                <label class="input-label" style="display: flex; align-items: center; gap: 6px;">
+                  <i data-lucide="video" style="width: 14px; color: var(--color-orange);"></i> ลิงก์ไฟล์วิดีโอสาธิต (Video Demo URL / Embed)
+                </label>
+                <input id="uploadVideoLink" type="url" class="input-field" placeholder="เช่น https://www.youtube.com/embed/dQw4w9WgXcQ หรือลิงก์ไฟล์วิดีโอ .mp4">
+              </div>
+
+              <div class="input-group">
+                <label class="input-label" style="display: flex; align-items: center; gap: 6px;">
+                  <i data-lucide="file-code" style="width: 14px; color: var(--color-purple);"></i> อัปโหลดไฟล์โค้ด (.c, .py, .html, .cpp, .js ฯลฯ)
+                </label>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <input id="uploadCodeFileInput" type="file" accept=".c,.py,.html,.htm,.cpp,.h,.js,.ts,.json,.zip,.txt" class="input-field" style="padding: 8px; background: white;" onchange="handleCodeFileUpload(event)">
+                  <input id="uploadCodeFileName" type="hidden" value="">
+                  <textarea id="uploadCodeSnippet" class="input-field" rows="4" style="font-family: monospace; font-size: 13px;" placeholder="// เมื่ออัปโหลดไฟล์ (.c, .py, .html) โค้ดจะแสดงพรีวิวที่นี่โดยอัตโนมัติ หรือสามารถวางโค้ดตรงนี้ได้เช่นกัน..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg" style="align-self: flex-end; margin-top: 12px;" onclick="submitNewProjectForApproval()">
+            ส่งคำขออนุมัติเผยแพร่ &rarr;
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- -->
+    <!-- 11. ADMIN PANEL PAGE                                      -->
+    <!-- --------------------------------------------------------- -->
+    <section id="page-admin" class="page-view">
+      <div class="section-header" style="margin-top: 20px;">
+        <div class="section-title-group">
+          <span class="badge-pill badge-purple" style="margin-bottom: 6px;">Admin Management Console</span>
+          <h2>แผงควบคุมผู้ดูแลระบบ (Admin Panel)</h2>
+          <p>จัดการการอนุมัติผลงานนักเรียน, แก้ไขหลักสูตร, จัดการข่าวสาร และศูนย์เอกสารดาวน์โหลด</p>
+        </div>
+      </div>
+
+      <div class="admin-tab-bar">
+        <button id="adm-tab-approvals" class="admin-tab-btn active" onclick="switchAdminTab('approvals')">
+          ⏳ คำขออนุมัติผลงาน (<span id="admPendingCount">2</span>)
+        </button>
+        <button id="adm-tab-featured" class="admin-tab-btn" onclick="switchAdminTab('featured')">
+          🌟 ปักหมุดผลงานหน้าแรก
+        </button>
+        <button id="adm-tab-curriculum" class="admin-tab-btn" onclick="switchAdminTab('curriculum')">
+          📘 จัดการหลักสูตรวิชาการ
+        </button>
+        <button id="adm-tab-news" class="admin-tab-btn" onclick="switchAdminTab('news')">
+          📰 จัดการข่าวสาร (+ โพสต์ / ลบ)
+        </button>
+        <button id="adm-tab-docs" class="admin-tab-btn" onclick="switchAdminTab('docs')">
+          📄 จัดการศูนย์เอกสาร (+ เพิ่ม / ลบ)
+        </button>
+      </div>
+
+      <!-- ADMIN TAB 1 -->
+      <div id="adm-sec-approvals" class="glass-panel" style="padding: 24px;">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">คำขออนุมัติการโพสต์ผลงานจากนักเรียน</h3>
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ภาพปก</th>
+                <th>ชื่อผลงาน</th>
+                <th>นักเรียนผู้ส่ง</th>
+                <th>สาขาวิชา</th>
+                <th>วันที่ส่ง</th>
+                <th>คำสั่งดำเนินการ</th>
+              </tr>
+            </thead>
+            <tbody id="admApprovalsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB 2 -->
+      <div id="adm-sec-featured" class="glass-panel" style="padding: 24px; display: none;">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">เลือกผลงานนักเรียนที่จะแสดงในหน้าแรก (Featured on Home)</h3>
+        <div id="admFeaturedToggleGrid" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+
+      <!-- ADMIN TAB 3 -->
+      <div id="adm-sec-curriculum" class="glass-panel" style="padding: 24px; display: none;">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">แก้ไขข้อมูล 3 สาขาวิชาในหลักสูตร KOSEN-KMITL</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+          <div style="border: 1px solid var(--color-slate-200); padding: 16px; border-radius: var(--radius-lg);">
+            <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">วิศวกรรมคอมพิวเตอร์</h4>
+            <div class="input-group" style="margin-bottom: 10px;">
+              <label class="input-label">คำอธิบายย่อ</label>
+              <textarea id="admCsDesc" class="input-field" rows="3">ออกแบบ พัฒนา และแก้ปัญหาระบบคอมพิวเตอร์ครบทุกด้าน รวมถึง AI, IoT และ Cyber Security</textarea>
+            </div>
+            <button class="btn btn-purple btn-sm" onclick="saveCurriculumEdit('cs')">บันทึกข้อมูล CS</button>
+          </div>
+
+          <div style="border: 1px solid var(--color-slate-200); padding: 16px; border-radius: var(--radius-lg);">
+            <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">วิศวกรรมไฟฟ้าและอิเล็กทรอนิกส์</h4>
+            <div class="input-group" style="margin-bottom: 10px;">
+              <label class="input-label">คำอธิบายย่อ</label>
+              <textarea id="admEeDesc" class="input-field" rows="3">รวมศาสตร์ไฟฟ้าและอิเล็กทรอนิกส์ พร้อมพลังงานสะอาดเพื่อเทคโนโลยีโลก</textarea>
+            </div>
+            <button class="btn btn-purple btn-sm" onclick="saveCurriculumEdit('ee')">บันทึกข้อมูล EE</button>
+          </div>
+
+          <div style="border: 1px solid var(--color-slate-200); padding: 16px; border-radius: var(--radius-lg);">
+            <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">วิศวกรรมแมคคาทรอนิกส์</h4>
+            <div class="input-group" style="margin-bottom: 10px;">
+              <label class="input-label">คำอธิบายย่อ</label>
+              <textarea id="admMeDesc" class="input-field" rows="3">ผสมผสานวิศวกรรมเครื่องกล ไฟฟ้า และคอมพิวเตอร์ สร้างหุ่นยนต์และระบบอัตโนมัติ</textarea>
+            </div>
+            <button class="btn btn-purple btn-sm" onclick="saveCurriculumEdit('me')">บันทึกข้อมูล ME</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB 4 -->
+      <div id="adm-sec-news" class="glass-panel" style="padding: 24px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="font-size: 18px; font-weight: 700;">จัดการข่าวสารและประกาศสถาบัน</h3>
+          <button class="btn btn-purple btn-sm" onclick="openAddNewsModal()">+ โพสต์ข่าวสารใหม่</button>
+        </div>
+        <div id="admNewsTableList" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+
+      <!-- ADMIN TAB 5 -->
+      <div id="adm-sec-docs" class="glass-panel" style="padding: 24px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="font-size: 18px; font-weight: 700;">จัดการเอกสารดาวน์โหลดวิชาการ</h3>
+          <button class="btn btn-purple btn-sm" onclick="openAddDocModal()">+ เพิ่มเอกสารใหม่</button>
+        </div>
+        <div id="admDocsTableList" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3><img src="7.png" alt="KOSEN-KMITL Logo" style="height: 28px; width: auto; vertical-align: middle; object-fit: contain; border-radius: 4px; margin-right: 6px;"> KOSEN-KMITL</h3>
+          <p style="font-size: 14px; color: var(--color-slate-400); line-height: 1.6; max-width: 320px; margin-top: 12px;">
+            สถาบันโคเซ็น แห่งสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง มุ่งเน้นวิศวกรรมปฏิบัติการชั้นนำ
+          </p>
+        </div>
+        <div class="footer-links">
+          <h4>เมนูหลัก</h4>
+          <ul>
+            <li><a onclick="navigateToPage('page-home')">หน้าแรก</a></li>
+            <li><a onclick="navigateToPage('page-curriculum')">หลักสูตรวิชาการ</a></li>
+            <li><a onclick="navigateToPage('page-portfolio')">ผลงานนักเรียน</a></li>
+            <li><a onclick="navigateToPage('page-news')">ข่าวสารและกิจกรรม</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>สำหรับนักเรียน & Admin</h4>
+          <ul>
+            <li><a onclick="navigateToPage('page-docs')">ศูนย์เอกสารดาวน์โหลด</a></li>
+            <li><a onclick="navigateToPage('page-login')">เข้าสู่ระบบพอร์ทัล</a></li>
+            <li id="footerAdminItem" style="display: none;"><a onclick="navigateToPage('page-admin')">แผงควบคุม Admin</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>ติดต่อสถาบัน</h4>
+          <p style="font-size: 13px; color: var(--color-slate-400); line-height: 1.6;">
+            1 Chalong Krung 1 Alley, Lat Krabang, Bangkok 10520<br>
+            http://www.kosen.kmitl.ac.th
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 KOSEN-KMITL (สถาบันโคเซ็น แห่ง สจล.). ออกแบบด้วยระบบ Liquid Glass Design System</div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- DEPARTMENT DETAILS MODAL -->
+  <div id="deptModalBackdrop" class="dept-modal-backdrop" onclick="closeDeptModal()">
+    <div class="dept-modal-card" onclick="event.stopPropagation()">
+      <div style="padding: 24px 24px 16px 24px; border-bottom: 1px solid var(--color-slate-100); display: flex; align-items: flex-start; justify-content: space-between;">
+        <div>
+          <span id="modalDeptCategory" class="badge-pill badge-orange" style="margin-bottom: 8px;">หลักสูตรอนุปริญญาวิศวกรรมศาสตร์ · KOSEN-KMITL</span>
+          <h2 id="modalDeptTitleTh" style="font-size: 22px; font-weight: 800; color: var(--color-slate-900);"></h2>
+          <p id="modalDeptTitleEn" style="font-size: 14px; color: var(--color-slate-500); font-weight: 600;"></p>
+        </div>
+        <button onclick="closeDeptModal()" style="background: #F1F5F9; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; color: var(--color-slate-600); display: flex; align-items: center; justify-content: center;">✕</button>
+      </div>
+
+      <div style="padding: 24px;">
+        <div style="margin-bottom: 20px;">
+          <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-slate-400); margin-bottom: 8px;">ภาพรวมสาขาวิชา</p>
+          <p id="modalDeptOverview" style="font-size: 14px; line-height: 1.75; color: var(--color-slate-700); white-space: pre-line;"></p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-slate-400); margin-bottom: 10px;">วิชาหลักในหลักสูตร</p>
+          <div id="modalDeptSubjects" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-slate-400); margin-bottom: 10px;">อาชีพที่เกี่ยวข้องหลังสำเร็จการศึกษา</p>
+          <ul id="modalDeptCareers" style="list-style: none; padding: 0;"></ul>
+        </div>
+
+        <a id="modalDeptLink" href="#" target="_blank" class="btn btn-primary" style="width: 100%; border-radius: var(--radius-md);">
+          ดูหลักสูตรเต็มบนเว็บไซต์ KOSEN-KMITL &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN ADD NEWS MODAL -->
+  <div id="addNewsModalBackdrop" class="dept-modal-backdrop" onclick="closeAddNewsModal()">
+    <div class="dept-modal-card" onclick="event.stopPropagation()">
+      <div style="padding: 20px; border-bottom: 1px solid var(--color-slate-100); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 18px; font-weight: 700;">โพสต์ข่าวสารใหม่ (Admin)</h3>
+        <button onclick="closeAddNewsModal()" style="background: #F1F5F9; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer;">✕</button>
+      </div>
+      <div style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+        <div class="input-group"><label class="input-label">หัวข้อข่าวสาร</label><input id="newNewsTitle" type="text" class="input-field" placeholder="เช่น การเปิดรับสมัครนักศึกษาใหม่ปี 2570"></div>
+        <div class="input-group"><label class="input-label">หมวดหมู่</label><select id="newNewsCategory" class="input-field"><option value="วิชาการ">วิชาการ</option><option value="ประกาศข่าวเด่น">ประกาศข่าวเด่น</option><option value="งานวิจัย">งานวิจัย</option></select></div>
+        <div class="input-group"><label class="input-label">รายละเอียดข่าวสาร</label><textarea id="newNewsDesc" class="input-field" rows="3" placeholder="เนื้อหาข่าวสาร..."></textarea></div>
+        <button class="btn btn-purple" style="align-self: flex-end;" onclick="submitNewNewsPost()">โพสต์ข่าวสาร &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN ADD DOCUMENT MODAL -->
+  <div id="addDocModalBackdrop" class="dept-modal-backdrop" onclick="closeAddDocModal()">
+    <div class="dept-modal-card" onclick="event.stopPropagation()">
+      <div style="padding: 20px; border-bottom: 1px solid var(--color-slate-100); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 18px; font-weight: 700;">เพิ่มเอกสารดาวน์โหลดใหม่ (Admin)</h3>
+        <button onclick="closeAddDocModal()" style="background: #F1F5F9; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer;">✕</button>
+      </div>
+      <div style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+        <div class="input-group"><label class="input-label">ชื่อเอกสาร</label><input id="newDocTitle" type="text" class="input-field" placeholder="เช่น คำร้องขอลงทะเบียนวิชาข้ามสาขา"></div>
+        <div class="input-group"><label class="input-label">คำอธิบาย</label><input id="newDocDesc" type="text" class="input-field" placeholder="สำหรับนักศึกษาอนุปริญญา"></div>
+        <div class="input-group"><label class="input-label">ขนาดไฟล์ / ประเภท</label><input id="newDocSize" type="text" class="input-field" placeholder="1.4 MB PDF"></div>
+        <button class="btn btn-purple" style="align-self: flex-end;" onclick="submitNewDocPost()">เพิ่มเอกสาร &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast" class="toast-notification">
+    <i data-lucide="check-circle" style="color: #10B981;"></i>
+    <span id="toastMsg">ทำรายการสำเร็จ</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Security: HTML Escaper for XSS Prevention
+    function escapeHTML(str) {
+      if (str === null || str === undefined) return '';
+      return String(str).replace(/[&<>'"]/g, 
+        tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+      );
+    }
+
+    if (typeof lucide !== 'undefined') {
+      try { lucide.createIcons(); } catch (e) { console.error('Lucide error:', e); }
+    }
+    let currentRole = 'Visitor';
+
+    const SUPABASE_URL = 'https://dsndcnthbvsfdseyghwi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzbmRjbnRoYnZzZmRzZXlnaHdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNzA3NTMsImV4cCI6MjA5Nzg0Njc1M30.w2oDuTq7rAt0YtLE-vpB_P2PYdMu1YoNMcqBAOI4l24';
+    let supabaseClient = null;
+    try {
+      if (window.supabase && window.supabase.createClient) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true
+          }
+        });
+      }
+    } catch(e) {
+      console.warn('Supabase init failed, running in resilient standalone mode:', e);
+    }
+
+    let currentSupabaseUser = null;
+    let currentUserId = null;
+    let isDemoSession = false;
+
+    // KMITL Email Parser (e.g. 67991021@kmitl.ac.th -> Generation & Department)
+    const parseEmailInfo = (email) => {
+      const match = email?.match(/^(\d{2})\d{2}(\d{2})\d{2}@kmitl\.ac\.th$/);
+      if (!match) return { generation: null, department: null };
+      const genNum = parseInt(match[1]);
+      const deptCode = match[2];
+      const generation = `รุ่น ${genNum - 62 + 1} (${genNum})`;
+      const deptMap = { '00': 'วิศวกรรมแมคคาทรอนิกส์', '10': 'วิศวกรรมคอมพิวเตอร์', '20': 'วิศวกรรมไฟฟ้า' };
+      const department = deptMap[deptCode] || `สาขา ${deptCode}`;
+      return { generation, department };
+    };
+
+    async function loadProfile(sessionUser) {
+      if (!sessionUser) {
+        if (isDemoSession) return;
+        currentSupabaseUser = null;
+        currentUserId = null;
+        setRole('Visitor');
+        return;
+      }
+      currentUserId = sessionUser.id;
+      currentSupabaseUser = sessionUser;
+
+      let fullName = sessionUser.user_metadata?.full_name || sessionUser.email?.split('@')[0] || 'ผู้ใช้งาน KOSEN';
+      let userRole = sessionUser.user_metadata?.role || 'Student';
+      let userDept = sessionUser.user_metadata?.department || 'วิศวกรรมคอมพิวเตอร์';
+      let userGen = sessionUser.user_metadata?.generation || '';
+
+      const parsed = parseEmailInfo(sessionUser.email);
+      if (parsed.department) userDept = parsed.department;
+      if (parsed.generation) userGen = parsed.generation;
+
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('profiles')
+            .select('full_name, role, department, generation, avatar_url')
+            .eq('id', sessionUser.id)
+            .single();
+          if (!error && data) {
+            if (data.full_name) fullName = data.full_name;
+            if (data.role) userRole = data.role;
+            if (data.department) userDept = data.department;
+            if (data.generation) userGen = data.generation;
+            if (data.avatar_url) changeUserAvatar(data.avatar_url, false);
+          }
+        } catch(e) { console.warn('Profile fetch note:', e); }
+      }
+
+      if (document.getElementById('profileNameInput')) document.getElementById('profileNameInput').value = fullName;
+      if (document.getElementById('profileEmailDisplay')) document.getElementById('profileEmailDisplay').value = sessionUser.email;
+      if (document.getElementById('profileDeptDisplay')) document.getElementById('profileDeptDisplay').value = userDept;
+
+      const roleMap = { 'student': 'Student', 'teacher': 'Teacher', 'admin': 'Admin', 'visitor': 'Visitor' };
+      const normalizedRole = roleMap[String(userRole).toLowerCase()] || 'Student';
+      setRole(normalizedRole);
+    }
+
+    // Department Data Dictionary
+    const deptsData = {
+      cs: {
+        nameTh: 'วิศวกรรมคอมพิวเตอร์',
+        nameEn: 'Computer Engineering',
+        overview: 'หลักสูตรวิศวกรรมคอมพิวเตอร์ เน้นในเรื่องของการออกแบบ พัฒนา ประยุกต์ใช้ และแก้ปัญหาระบบคอมพิวเตอร์และปฏิบัติการทุกด้าน รวมทั้งตามเทรนโลกในเรื่องของระบบ AI, IoT และ Network & Cyber Security\n\nสาขาวิศวกรรมคอมพิวเตอร์เป็นสาขาที่มุ่งพัฒนาระบบคอมพิวเตอร์ผ่านเทคโนโลยีชั้นนำ ดังนั้นนักศึกษาจึงมีความรู้ ความเข้าใจ และมีความสามารถในการออกแบบ พัฒนา ประยุกต์ และแก้ไขปัญหาเกี่ยวกับระบบปฏิบัติการ ซอฟต์แวร์ ฮาร์ดแวร์ เครือข่าย และระบบรักษาความปลอดภัย ตลอดจนสนับสนุนให้นักศึกษามีความรู้ทางเทคโนโลยี IoT และ AI ซึ่งเป็นหนึ่งในเทคโนโลยีที่ได้รับความนิยมอีกด้วย',
+        subjects: ['Programming (C / Python)', 'Data Structures', 'Computer Networks', 'Database Systems', 'Embedded Systems', 'Web Development', 'IoT Systems', 'AI & Machine Learning', 'Cyber Security'],
+        careers: ['Software Developer / Full-Stack Engineer', 'Network & Systems Administrator', 'Embedded Systems / IoT Engineer', 'AI / Data Engineer', 'Cyber Security Specialist'],
+        link: 'http://www.kosen.kmitl.ac.th/curriculums/diploma-of-engineering-in-computer-engineering'
+      },
+      ee: {
+        nameTh: 'วิศวกรรมไฟฟ้าและอิเล็กทรอนิกส์',
+        nameEn: 'Electrical and Electronics Engineering',
+        overview: 'หลักสูตรวิศวกรรมไฟฟ้าและอิเล็กทรอนิกส์ รวมศาสตร์ด้านไฟฟ้าและอิเล็กทรอนิกส์เข้าด้วยกัน โดยประยุกต์และพัฒนาความเชี่ยวชาญในสองสาขาวิศวกรรมพื้นฐานนี้ รวมถึงการเรียนรู้การใช้พลังงานทดแทนและพลังงานสะอาด เพื่อก้าวทันเทคโนโลยีของโลก',
+        subjects: ['Circuit Analysis', 'Digital Electronics', 'Power Systems', 'Signal Processing', 'Control Systems', 'Microcontrollers', 'Electric Machines', 'PCB Design', 'Renewable Energy'],
+        careers: ['Electronics / Circuit Design Engineer', 'Power Systems Technician', 'Control Systems Engineer', 'R&D Engineer in Manufacturing', 'Renewable Energy Engineer'],
+        link: 'http://www.kosen.kmitl.ac.th/curriculums/diploma-of-engineering-in-electrical-and-electronics-engineering'
+      },
+      me: {
+        nameTh: 'วิศวกรรมแมคคาทรอนิกส์',
+        nameEn: 'Mechatronics Engineering',
+        overview: 'หลักสูตรวิศวกรรมแมคคาทรอนิกส์ผสมผสานวิศวกรรมเครื่องกล ไฟฟ้า และคอมพิวเตอร์ เพื่อสร้างเครื่องจักรอัจฉริยะและระบบอัตโนมัติ นักศึกษาได้สร้างหุ่นยนต์จริง ออกแบบสายการผลิตอัตโนมัติ และบูรณาการเซ็นเซอร์เข้ากับซอฟต์แวร์ ตามแบบฉบับ KOSEN ประเทศญี่ปุ่น',
+        subjects: ['Mechanics & Statics', 'Robotics Fundamentals', 'Hydraulics & Pneumatics', 'PLC Programming', 'Sensors & Actuators', 'CAD / 3D Modeling', 'Automation Systems', 'CNC Machining'],
+        careers: ['Robotics / Automation Engineer', 'CNC & Manufacturing Technician', 'Mechatronics System Integrator', 'R&D Engineer in Automotive / Electronics'],
+        link: 'http://www.kosen.kmitl.ac.th/curriculums/diploma-of-engineering-in-mechatronics-engineering'
+      }
+    };
+
+    let publishedProjects = [
+      {
+        id: 4,
+        title: 'มือเทียมไบโอนิคเพื่อการแพทย์ v4',
+        student: 'เลียม ธอร์น',
+        dept: 'วิศวกรรมแมคคาทรอนิกส์',
+        img: 'student_project_4_1785907257636.jpg',
+        likes: 412,
+        views: '3.9k',
+        tag: 'หุ่นยนต์',
+        isFeaturedHome: true
+      },
+      {
+        id: 1,
+        title: 'Aether: จำลองระบบสุริยะ AR สำหรับห้องเรียน',
+        student: 'อเล็กซ์ เฉิน',
+        dept: 'วิศวกรรมคอมพิวเตอร์',
+        img: 'student_project_1_1785907210627.jpg',
+        likes: 342,
+        views: '2.1k',
+        tag: 'WebGL',
+        isFeaturedHome: true
+      },
+      {
+        id: 2,
+        title: 'BioSphere: อาคารแคมปัสปล่อยคาร์บอนเป็นศูนย์',
+        student: 'มาร์คัส แวนซ์',
+        dept: 'วิศวกรรมไฟฟ้า',
+        img: 'student_project_2_1785907221524.jpg',
+        likes: 289,
+        views: '1.8k',
+        tag: 'ความยั่งยืน',
+        isFeaturedHome: true
+      },
+      {
+        id: 3,
+        title: 'Synapse: แดชบอร์ดกราฟสมองและประสาทวิทยา',
+        student: 'เอเลนา รอสโตวา',
+        dept: 'วิศวกรรมคอมพิวเตอร์',
+        img: 'student_project_3_1785907246432.jpg',
+        likes: 512,
+        views: '3.4k',
+        tag: 'Python / AI',
+        isFeaturedHome: false
+      }
+    ];
+
+    let pendingProjects = [
+      {
+        id: 101,
+        title: 'ระบบตรวจจับรอยแตกร้าวอาคารด้วยโดรน AI',
+        student: 'ณัฐพงษ์ สุขเจริญ (ชั้นปี 4)',
+        dept: 'วิศวกรรมคอมพิวเตอร์',
+        img: 'student_project_3_1785907246432.jpg',
+        date: '5 ส.ค. 2569',
+        desc: 'ประมวลผลวิดีโอจากโดรนสำรวจผ่านโมเดล YOLOv8 เพื่อค้นหารอยแตกบนโครงสร้างคอนกรีต'
+      },
+      {
+        id: 102,
+        title: 'ระบบควบคุมแขนกลอุตสาหกรรมด้วยคลื่นสมอง EEG',
+        student: 'พิชญ์ชาญ นราธิป (ชั้นปี 3)',
+        dept: 'วิศวกรรมแมคคาทรอนิกส์',
+        img: 'student_project_4_1785907257636.jpg',
+        date: '4 ส.ค. 2569',
+        desc: 'ใช้อุปกรณ์วัดสัญญาณประสาทสั่งการยึดจับของแขนกลในสายการผลิตอัตโนมัติ'
+      }
+    ];
+
+    let newsItems = [
+      {
+        id: 1,
+        title: 'KOSEN-KMITL คว้ารางวัลนวัตกรรมหุ่นยนต์ระดับสากลประจำปี 2026',
+        desc: 'ทีมนักเรียนวิศวกรรมแมคคาทรอนิกส์คว้ารางวัลอันดับ 1 ในการแข่งขันหุ่นยนต์ระดับนานาชาติ',
+        category: 'ประกาศข่าวเด่น',
+        date: '4 สิงหาคม 2569',
+        img: 'school_campus_1785907232744.jpg',
+        isFeatured: true
+      },
+      {
+        id: 2,
+        title: 'เปิดลงทะเบียนเรียนภาคเรียนฤดูใบไม้ร่วงวันจันทร์นี้',
+        desc: 'ให้นักศึกษาทุกชั้นปีตรวจสอบตารางเรียนล่วงหน้า',
+        category: 'วิชาการ',
+        date: '1 สิงหาคม 2569',
+        img: '',
+        isFeatured: false
+      },
+      {
+        id: 3,
+        title: 'งานสัมมนา AI & Bionics ประกาศรายชื่อวิทยากรพิเศษ',
+        desc: 'การบรรยายพิเศษโดยผู้เชี่ยวชาญจาก KOSEN ประเทศญี่ปุ่น',
+        category: 'งานวิจัย',
+        date: '28 กรกฎาคม 2569',
+        img: '',
+        isFeatured: false
+      }
+    ];
+
+    let docItems = [
+      {
+        id: 1,
+        title: 'คู่มือนักศึกษาหลักสูตรโคเซ็น KOSEN-KMITL ปี 2026',
+        desc: 'แนวปฏิบัติในแคมปัสและเกณฑ์การเก็บหน่วยกิต',
+        date: '1 ส.ค. 2569',
+        size: '2.8 MB PDF',
+        icon: 'file-text'
+      },
+      {
+        id: 2,
+        title: 'ตารางสอบปลายภาค ภาคเรียนฤดูใบไม้ร่วง 2026',
+        desc: 'ตารางเวลาสอบรวมทุกสาขาวิชา',
+        date: '29 ก.ย. 2569',
+        size: '1.1 MB XLSX',
+        icon: 'file-spreadsheet'
+      }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      try { setRole('Visitor'); } catch(e) { console.error('setRole error:', e); }
+      if (supabaseClient) {
+        try {
+          supabaseClient.auth.getSession()
+            .then(res => loadProfile(res?.data?.session?.user))
+            .catch(err => console.warn('Supabase session fetch bypassed:', err));
+
+          supabaseClient.auth.onAuthStateChange((_e, session) => loadProfile(session?.user));
+          fetchProjects().catch(err => console.warn('Supabase projects fetch bypassed:', err));
+        } catch(err) {
+          console.warn('Supabase init bypassed:', err);
+        }
+      }
+      try { renderAllViews(); } catch(e) { console.error('renderAllViews error:', e); }
+    });
+
+    function renderAllViews() {
+      renderHomeFeaturedProjects();
+      renderPortfolioGallery();
+      renderNewsList();
+      renderDocsTable();
+      renderAdminApprovalsTable();
+      renderAdminFeaturedToggles();
+      renderAdminNewsList();
+      renderAdminDocsList();
+      updatePendingBadge();
+      if (typeof lucide !== 'undefined') {
+        try { lucide.createIcons(); } catch(e) { console.error('Lucide error:', e); }
+      }
+    }
+
+    async function fetchProjects() {
+      if (!supabaseClient) return;
+      try {
+        const { data, error } = await supabaseClient
+          .from('projects')
+          .select(`
+            id, title, description, category, media_type, media_url, external_link,
+            attachment_name, attachment_url, likes_count, created_at, generation, department,
+            profiles!projects_author_id_fkey (full_name),
+            project_comments (id, content, profiles (full_name))
+          `)
+          .order('created_at', { ascending: false });
+
+        if (!error && data && data.length > 0) {
+          publishedProjects = data.map(p => ({
+            id: p.id,
+            title: p.title,
+            student: p.profiles?.full_name || 'นักศึกษา KOSEN',
+            dept: p.department || p.category || 'วิศวกรรมคอมพิวเตอร์',
+            img: p.media_url || 'student_project_4_1785907257636.jpg',
+            likes: p.likes_count || 0,
+            views: '1.2k',
+            tag: p.category || (p.generation ? p.generation : 'นวัตกรรม'),
+            isFeaturedHome: true,
+            desc: p.description,
+            webLink: p.external_link,
+            videoLink: (p.media_type === 'video' ? p.media_url : ''),
+            codeFileName: p.attachment_name,
+            codeSnippet: p.attachment_url,
+            comments: (p.project_comments || []).map(c => ({ author: c.profiles?.full_name || 'สมาชิก', text: c.content }))
+          }));
+          renderAllViews();
+        }
+      } catch (err) {
+        console.error('Supabase fetch projects error:', err);
+      }
+    }
+
+    async function uploadToStorage(file) {
+      if (!supabaseClient || !currentUserId) return '';
+      const ext = file.name.split('.').pop();
+      const safeName = `${Date.now()}.${ext}`;
+      const path = `${currentUserId}/${safeName}`;
+      const { error: uploadError } = await supabaseClient.storage.from('project-media').upload(path, file);
+      if (uploadError) throw uploadError;
+      const { data } = supabaseClient.storage.from('project-media').getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    function renderHomeFeaturedProjects() {
+      const container = document.getElementById('homeFeaturedGrid');
+      const featured = publishedProjects.filter(p => p.isFeaturedHome);
+      container.innerHTML = featured.map(p => `
+        <div class="glass-panel glass-panel-hover project-card" onclick="openProjectDetail('${p.id}')">
+          <div class="project-thumb">
+            <img src="${escapeHTML(p.img)}" alt="${escapeHTML(p.title)}">
+            <span class="project-badge">${escapeHTML(p.dept)}</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">${escapeHTML(p.title)}</h3>
+            <div class="project-author">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop" class="avatar">
+              <span>${escapeHTML(p.student)}</span>
+            </div>
+            <div class="project-footer">
+              <div class="project-stats">
+                <span class="stat-btn liked" onclick="event.stopPropagation(); incrementLike(this, '${p.id}');"><i data-lucide="heart" style="width: 14px;"></i> <span>${p.likes}</span></span>
+                <span class="stat-btn"><i data-lucide="eye" style="width: 14px;"></i> ${p.views}</span>
+              </div>
+              <span class="tag tag-blue">${escapeHTML(p.tag)}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    let currentPortfolioFilter = 'all';
+
+    function toggleMobileMenu() {
+      const navLinks = document.querySelector('.nav-links');
+      if (navLinks) {
+        navLinks.classList.toggle('active-mobile');
+        if (navLinks.classList.contains('active-mobile')) {
+          navLinks.style.display = 'flex';
+          navLinks.style.flexDirection = 'column';
+          navLinks.style.position = 'absolute';
+          navLinks.style.top = '70px';
+          navLinks.style.left = '0';
+          navLinks.style.right = '0';
+          navLinks.style.background = 'rgba(255, 255, 255, 0.96)';
+          navLinks.style.backdropFilter = 'blur(16px)';
+          navLinks.style.padding = '20px';
+          navLinks.style.borderBottom = '1px solid var(--color-slate-200)';
+          navLinks.style.boxShadow = '0 10px 30px rgba(0,0,0,0.12)';
+          navLinks.style.zIndex = '999';
+        } else {
+          navLinks.style.display = '';
+        }
+      }
+    }
+
+    function filterPortfolio(category) {
+      currentPortfolioFilter = category;
+      document.querySelectorAll('#page-portfolio .preset-pill').forEach(btn => {
+        btn.style.background = 'rgba(255, 255, 255, 0.7)';
+        btn.style.color = 'var(--color-slate-700)';
+      });
+      const activeId = `filter-${category === 'วิศวกรรมคอมพิวเตอร์' ? 'cs' : (category === 'วิศวกรรมไฟฟ้า' ? 'ee' : (category === 'วิศวกรรมแมคคาทรอนิกส์' ? 'me' : 'all'))}`;
+      const activeBtn = document.getElementById(activeId);
+      if (activeBtn) {
+        activeBtn.style.background = 'var(--color-royal-blue)';
+        activeBtn.style.color = '#FFFFFF';
+      }
+      renderPortfolioGallery();
+    }
+
+    // AUTOMATED SKELETON LOADING ON PORTFOLIO GALLERY
+    function renderPortfolioGallery() {
+      const grid = document.getElementById('portfolioGrid');
+      const loading = document.getElementById('portfolioLoading');
+      const empty = document.getElementById('portfolioEmpty');
+
+      if (!grid || !loading || !empty) return;
+
+      empty.style.display = 'none';
+      grid.style.display = 'none';
+      loading.style.display = 'grid';
+
+      const filtered = (currentPortfolioFilter === 'all')
+        ? publishedProjects
+        : publishedProjects.filter(p => p.dept && (p.dept.includes(currentPortfolioFilter) || p.dept === currentPortfolioFilter));
+
+      // HTML Render of real project cards
+      grid.innerHTML = filtered.map(p => `
+        <div class="glass-panel glass-panel-hover project-card" onclick="openProjectDetail('${p.id}')">
+          <div class="project-thumb">
+            <img src="${escapeHTML(p.img)}" alt="${escapeHTML(p.title)}">
+            <span class="project-badge">${escapeHTML(p.dept)}</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">${escapeHTML(p.title)}</h3>
+            <div class="project-author">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop" class="avatar">
+              <span>${escapeHTML(p.student)}</span>
+            </div>
+            <div class="project-footer">
+              <div class="project-stats">
+                <span class="stat-btn" onclick="event.stopPropagation(); incrementLike(this, '${p.id}');"><i data-lucide="heart" style="width: 14px;"></i> <span>${p.likes}</span></span>
+                <span class="stat-btn"><i data-lucide="eye" style="width: 14px;"></i> ${p.views}</span>
+              </div>
+              <span class="tag tag-orange">${escapeHTML(p.tag)}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Automated Skeleton Transition after 400ms
+      setTimeout(() => {
+        loading.style.display = 'none';
+        if (filtered.length === 0) {
+          empty.style.display = 'flex';
+        } else {
+          grid.style.display = 'grid';
+        }
+      }, 400);
+    }
+
+    function renderNewsList() {
+      const container = document.getElementById('newsCardsContainer');
+      const featNews = newsItems.find(n => n.isFeatured);
+      const regularNews = newsItems.filter(n => !n.isFeatured);
+
+      let html = '';
+      if (featNews) {
+        html += `
+          <div class="glass-panel featured-news-card">
+            <img src="${escapeHTML(featNews.img) || 'school_campus_1785907232744.jpg'}" class="featured-news-img" alt="Campus News">
+            <div style="padding: 24px; display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+              <span class="badge-pill badge-orange" style="width: fit-content;">${escapeHTML(featNews.category)}</span>
+              <h2 style="font-size: 22px; font-weight: 800; color: var(--color-slate-900);">${escapeHTML(featNews.title)}</h2>
+              <p style="font-size: 14px; color: var(--color-slate-600);">${escapeHTML(featNews.desc)}</p>
+              <span style="font-size: 12px; color: var(--color-slate-400);">${escapeHTML(featNews.date)}</span>
+              ${currentRole === 'Admin' ? `<button class="btn btn-red btn-sm" style="align-self: flex-start; margin-top: 8px;" onclick="deleteNewsPost('${featNews.id}')"><i data-lucide="trash-2"></i> ลบข่าวสารนี้</button>` : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      html += `<div style="display: flex; flex-direction: column; gap: 16px;">`;
+      regularNews.forEach(n => {
+        html += `
+          <div class="glass-panel glass-panel-hover" style="padding: 20px; display: flex; gap: 16px; align-items: center;">
+            <div class="qa-icon qa-icon-blue"><i data-lucide="bell"></i></div>
+            <div style="flex-grow: 1;">
+              <span class="tag tag-blue">${escapeHTML(n.category)}</span>
+              <h3 style="font-size: 16px; font-weight: 700; margin-top: 4px;">${escapeHTML(n.title)}</h3>
+              <p style="font-size: 13px; color: var(--color-slate-500);">${escapeHTML(n.desc)}</p>
+              <span style="font-size: 12px; color: var(--color-slate-400);">${escapeHTML(n.date)}</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-glass btn-sm" onclick="showToast('กำลังอ่านประกาศ...')">อ่านข่าว</button>
+              ${currentRole === 'Admin' ? `<button class="btn btn-red btn-sm" onclick="deleteNewsPost('${n.id}')"><i data-lucide="trash-2"></i> ลบ</button>` : ''}
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function renderDocsTable() {
+      const tbody = document.getElementById('docsTableBody');
+      tbody.innerHTML = docItems.map(d => `
+        <tr class="doc-row">
+          <td class="doc-cell" style="width: 60px;">
+            <div class="doc-icon-box"><i data-lucide="${escapeHTML(d.icon || 'file-text')}"></i></div>
+          </td>
+          <td class="doc-cell">
+            <div style="font-weight: 700; font-size: 15px;">${escapeHTML(d.title)}</div>
+            <div style="font-size: 12px; color: var(--color-slate-500);">${escapeHTML(d.desc)}</div>
+          </td>
+          <td class="doc-cell" style="color: var(--color-slate-500);">${escapeHTML(d.date)}</td>
+          <td class="doc-cell" style="color: var(--color-slate-500);">${escapeHTML(d.size)}</td>
+          <td class="doc-cell">
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+              <button class="btn btn-primary btn-sm" onclick="showToast('กำลังดาวน์โหลดเอกสาร...')"><i data-lucide="download"></i> ดาวน์โหลด</button>
+              ${currentRole === 'Admin' ? `<button class="btn btn-red btn-sm" onclick="deleteDocPost('${d.id}')"><i data-lucide="trash-2"></i> ลบ</button>` : ''}
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderAdminApprovalsTable() {
+      const tbody = document.getElementById('admApprovalsTableBody');
+      if (pendingProjects.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--color-slate-400); padding: 32px;">ไม่มีคำขออนุมัติผลงานค้างอยู่ในระบบ</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = pendingProjects.map(p => `
+        <tr>
+          <td><img src="${escapeHTML(p.img)}" style="width: 54px; height: 40px; border-radius: var(--radius-sm); object-fit: cover;"></td>
+          <td><strong>${escapeHTML(p.title)}</strong><div style="font-size: 12px; color: var(--color-slate-500);">${escapeHTML(p.desc)}</div></td>
+          <td>${escapeHTML(p.student)}</td>
+          <td><span class="tag tag-blue">${escapeHTML(p.dept)}</span></td>
+          <td style="color: var(--color-slate-400); font-size: 13px;">${escapeHTML(p.date)}</td>
+          <td>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-green btn-sm" onclick="approveProject('${p.id}')">✅ อนุมัติ</button>
+              <button class="btn btn-red btn-sm" onclick="rejectProject('${p.id}')">❌ ปฏิเสธ</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderAdminFeaturedToggles() {
+      const container = document.getElementById('admFeaturedToggleGrid');
+      container.innerHTML = publishedProjects.map(p => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px; background: #F8FAFC; border-radius: var(--radius-md); border: 1px solid var(--color-slate-200);">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <img src="${escapeHTML(p.img)}" style="width: 50px; height: 40px; border-radius: var(--radius-sm); object-fit: cover;">
+            <div>
+              <div style="font-weight: 700; font-size: 14px;">${escapeHTML(p.title)}</div>
+              <div style="font-size: 12px; color: var(--color-slate-500);">${escapeHTML(p.student)} &bull; ${escapeHTML(p.dept)}</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 13px; font-weight: 600; color: ${p.isFeaturedHome ? '#10B981' : '#64748B'};">
+              ${p.isFeaturedHome ? '🌟 ปักหมุดหน้าแรกอยู่' : 'ซ่อนจากหน้าแรก'}
+            </span>
+            <button class="btn ${p.isFeaturedHome ? 'btn-red' : 'btn-green'} btn-sm" onclick="toggleProjectFeatured('${p.id}')">
+              ${p.isFeaturedHome ? 'ยกเลิกปักหมุด' : 'ปักหมุดหน้าแรก'}
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAdminNewsList() {
+      const container = document.getElementById('admNewsTableList');
+      container.innerHTML = newsItems.map(n => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px; background: #F8FAFC; border-radius: var(--radius-md); border: 1px solid var(--color-slate-200);">
+          <div>
+            <span class="badge-pill badge-purple" style="margin-bottom: 4px;">${escapeHTML(n.category)}</span>
+            <div style="font-weight: 700; font-size: 15px;">${escapeHTML(n.title)}</div>
+            <div style="font-size: 12px; color: var(--color-slate-400);">${escapeHTML(n.date)}</div>
+          </div>
+          <button class="btn btn-red btn-sm" onclick="deleteNewsPost('${n.id}')"><i data-lucide="trash-2"></i> ลบข่าวสาร</button>
+        </div>
+      `).join('');
+    }
+
+    function renderAdminDocsList() {
+      const container = document.getElementById('admDocsTableList');
+      container.innerHTML = docItems.map(d => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px; background: #F8FAFC; border-radius: var(--radius-md); border: 1px solid var(--color-slate-200);">
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">${escapeHTML(d.title)}</div>
+            <div style="font-size: 12px; color: var(--color-slate-500);">${escapeHTML(d.size)} &bull; ${escapeHTML(d.date)}</div>
+          </div>
+          <button class="btn btn-red btn-sm" onclick="deleteDocPost('${d.id}')"><i data-lucide="trash-2"></i> ลบเอกสาร</button>
+        </div>
+      `).join('');
+    }
+
+    function togglePassVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+      if (btn) {
+        btn.innerHTML = isPass ? '<i data-lucide="eye-off" style="width: 15px;"></i>' : '<i data-lucide="eye" style="width: 15px;"></i>';
+        if (typeof lucide !== 'undefined') {
+          try { lucide.createIcons(); } catch(e){}
+        }
+      }
+    }
+
+    function handleRegRoleChange() {
+      const role = document.getElementById('regRoleSelect')?.value;
+      const deptGroup = document.getElementById('regDeptGroup');
+      const genGroup = document.getElementById('regGenGroup');
+      if (role === 'Visitor') {
+        if (deptGroup) deptGroup.style.display = 'none';
+        if (genGroup) genGroup.style.display = 'none';
+      } else {
+        if (deptGroup) deptGroup.style.display = 'flex';
+        if (genGroup) genGroup.style.display = 'flex';
+      }
+    }
+
+    function setEmailPreset(email, password = 'kosen123456') {
+      const emailEl = document.getElementById('loginEmailInput');
+      const passEl = document.getElementById('loginPassInput');
+      if (emailEl) emailEl.value = email;
+      if (passEl) passEl.value = password;
+      showToast(`⚡ เข้าสู่ระบบบัญชีตัวอย่าง: ${email}`);
+      loginUserWithSupabase(true); // Instant local demo login
+    }
+
+    async function loginUserWithSupabase(bypass = false) {
+      const emailInput = document.getElementById('loginEmailInput')?.value.trim();
+      const passInput = document.getElementById('loginPassInput')?.value;
+      const email = emailInput ? emailInput.toLowerCase() : '';
+
+      if (!email || !email.includes('@')) {
+        showToast('⚠️ กรุณากรอกอีเมล หรือ Gmail ให้ถูกต้อง');
+        return;
+      }
+      if (!passInput) {
+        showToast('⚠️ กรุณากรอกรหัสผ่าน');
+        return;
+      }
+
+      const submitBtn = document.getElementById('loginSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i data-lucide="loader" style="width: 16px;"></i> กำลังเข้าสู่ระบบ...';
+        if (typeof lucide !== 'undefined') { try { lucide.createIcons(); } catch(e){} }
+      }
+
+      // 1. Try Supabase Auth SignIn (Skip if 1-Click Demo bypass=true)
+      if (supabaseClient && !bypass) {
+        try {
+          // Wrapped in a 2.5-second timeout in case database is in paused/slow state
+          const loginPromise = supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: passInput
+          });
+          
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Timeout')), 2500)
+          );
+
+          const { data, error } = await Promise.race([loginPromise, timeoutPromise]);
+
+          if (!error && data?.user) {
+            currentUserId = data.user.id;
+            currentSupabaseUser = data.user;
+            await loadProfile(data.user);
+            showToast(`✅ เข้าสู่ระบบ Supabase สำเร็จ: ${data.user.email}`);
+
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i data-lucide="log-in" style="width: 16px;"></i> เข้าสู่ระบบ (Sign In)';
+              if (typeof lucide !== 'undefined') { try { lucide.createIcons(); } catch(e){} }
+            }
+
+            setTimeout(() => {
+              if (currentRole === 'Admin') navigateToPage('page-admin');
+              else navigateToPage('page-home');
+            }, 600);
+            return;
+          } else if (error) {
+            // Check if it is a credential error (Invalid login credentials, etc.)
+            const msg = error.message.toLowerCase();
+            if (error.status === 400 || error.status === 422 || msg.includes('credentials') || msg.includes('invalid')) {
+              showToast(`⚠️ เข้าสู่ระบบล้มเหลว: อีเมลหรือรหัสผ่านไม่ถูกต้อง`);
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i data-lucide="log-in" style="width: 16px;"></i> เข้าสู่ระบบ (Sign In)';
+                if (typeof lucide !== 'undefined') { try { lucide.createIcons(); } catch(e){} }
+              }
+              return; // Strict abort for wrong credentials
+            } else {
+              console.warn('Supabase Auth warning, falling back:', error.message);
+            }
+          }
+        } catch(e) {
+          if (e.message === 'Timeout') {
+            showToast('🔌 ระบบฐานข้อมูลตอบสนองช้า: กำลังสลับไปโหมดจำลอง (Local Demo)...');
+          } else {
+            console.warn('Supabase Auth exception, falling back:', e);
+          }
+        }
+      }
+
+      // 2. Fallback local resolver (for instant demo accounts or when DB is paused/offline)
+      let detectedRole = 'Student';
+      let detectedName = 'นักศึกษา KOSEN-KMITL';
+      let detectedDept = 'วิศวกรรมคอมพิวเตอร์';
+
+      if (email.includes('admin')) {
+        detectedRole = 'Admin';
+        detectedName = 'ผู้ดูแลระบบ KOSEN';
+      } else if (email.includes('teacher') || email.includes('ajarn')) {
+        detectedRole = 'Teacher';
+        detectedName = 'อาจารย์ที่ปรึกษา KOSEN';
+      } else if (email.includes('gmail')) {
+        const username = email.split('@')[0];
+        detectedName = username.charAt(0).toUpperCase() + username.slice(1);
+        detectedRole = 'Student';
+      }
+
+      const parsed = parseEmailInfo(email);
+      if (parsed.department) detectedDept = parsed.department;
+
+      if (document.getElementById('profileNameInput')) document.getElementById('profileNameInput').value = detectedName;
+      if (document.getElementById('profileEmailDisplay')) document.getElementById('profileEmailDisplay').value = email;
+      if (document.getElementById('profileDeptDisplay')) document.getElementById('profileDeptDisplay').value = detectedDept;
+
+      isDemoSession = true;
+      currentUserId = 'demo-user-id';
+      currentSupabaseUser = { id: 'demo-user-id', email: email };
+
+      setRole(detectedRole);
+      showToast(`เข้าสู่ระบบสำเร็จ: ${email} (${detectedRole})`);
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i data-lucide="log-in" style="width: 16px;"></i> เข้าสู่ระบบ (Sign In)';
+        if (typeof lucide !== 'undefined') { try { lucide.createIcons(); } catch(e){} }
+      }
+
+      setTimeout(() => {
+        if (detectedRole === 'Admin') navigateToPage('page-admin');
+        else navigateToPage('page-home');
+      }, 600);
+    }
+
+    async function registerNewUser() {
+      const fullName = document.getElementById('regFullNameInput')?.value.trim();
+      const email = document.getElementById('regEmailInput')?.value.trim().toLowerCase();
+      const password = document.getElementById('regPassInput')?.value;
+      const confirmPassword = document.getElementById('regConfirmPassInput')?.value;
+      const role = document.getElementById('regRoleSelect')?.value || 'Student';
+      const department = document.getElementById('regDeptSelect')?.value || 'วิศวกรรมคอมพิวเตอร์';
+      const generation = document.getElementById('regGenInput')?.value.trim() || '';
+
+      if (!fullName) {
+        showToast('⚠️ กรุณากรอกชื่อ-นามสกุลของคุณ');
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        showToast('⚠️ กรุณากรอกอีเมล / Gmail ให้ถูกต้อง');
+        return;
+      }
+      if (!password || password.length < 6) {
+        showToast('⚠️ รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร');
+        return;
+      }
+      if (password !== confirmPassword) {
+        showToast('⚠️ รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน');
+        return;
+      }
+
+      const submitBtn = document.getElementById('regSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i data-lucide="loader" style="width: 16px;"></i> กำลังลงทะเบียน...';
+        if (typeof lucide !== 'undefined') { try { lucide.createIcons(); } catch(e){} }
+      }
+
+      // 1. Real Supabase Auth SignUp
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+              data: {
+                full_name: fullName,
+                role: role.toLowerCase(),
+                department: department,
+                generation: generation
+              }
+            }
+          });
+
+          if (error) {
+            console.warn('Supabase signup notice:', error.message);
+            if (error.message.toLowerCase().includes('already registered')) {
+              showToast('⚠️ อีเมลนี้ถูกลงทะเบียนไว้แล้ว กรุณาเข้าสู่ระบบ');
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i data-lucide="user-plus" style="width: 16px;"></i> ยืนยันการสมัครสมาชิก (Create Account)';
+                if (typeof lucide !== 'undefined') { try { lucide.createIcons(); } catch(e){} }
+              }
+              navigateToPage('page-login');
+              return;
+            }
+          } else if (data?.user) {
+            currentUserId = data.user.id;
+            currentSupabaseUser = data.user;
+
+            try {
+              await supabaseClient.from('profiles').upsert({
+                id: data.user.id,
+                full_name: fullName,
+                role: role.toLowerCase(),
+                department: department,
+                generation: generation,
+                updated_at: new Date().toISOString()
+              });
+            } catch (profErr) {
+              console.warn('Profile sync note:', profErr);
+            }
+          }
+        } catch (e) {
+          console.warn('Supabase signup exception:', e);
+        }
+      }
+
+      // 2. Local State Sync
+      if (document.getElementById('profileNameInput')) document.getElementById('profileNameInput').value = fullName;
+      if (document.getElementById('profileEmailDisplay')) document.getElementById('profileEmailDisplay').value = email;
+      if (document.getElementById('profileDeptDisplay')) document.getElementById('profileDeptDisplay').value = department;
+
+      setRole(role);
+      showToast(`🎉 สมัครสมาชิกและเข้าสู่ระบบสำเร็จ: คุณ ${fullName} (${role})`);
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i data-lucide="user-plus" style="width: 16px;"></i> ยืนยันการสมัครสมาชิก (Create Account)';
+        if (typeof lucide !== 'undefined') { try { lucide.createIcons(); } catch(e){} }
+      }
+
+      setTimeout(() => {
+        if (role === 'Admin') navigateToPage('page-admin');
+        else navigateToPage('page-home');
+      }, 700);
+    }
+
+
+
+    // Alias for backward compatibility
+    const loginAndRedirectByEmail = loginUserWithSupabase;
+
+    function approveProject(id) {
+      const idx = pendingProjects.findIndex(p => String(p.id) === String(id));
+      if (idx !== -1) {
+        const approved = pendingProjects.splice(idx, 1)[0];
+        publishedProjects.push({
+          id: Date.now(),
+          title: approved.title,
+          student: approved.student,
+          dept: approved.dept,
+          img: approved.img,
+          likes: 0,
+          views: '1',
+          tag: 'นวัตกรรมใหม่',
+          isFeaturedHome: true,
+          desc: approved.desc,
+          webLink: approved.webLink,
+          videoLink: approved.videoLink,
+          codeFileName: approved.codeFileName,
+          codeSnippet: approved.codeSnippet
+        });
+        renderAllViews();
+        showToast(`✅ อนุมัติผลงาน "${approved.title}" เรียบร้อยแล้ว!`);
+      }
+    }
+
+    function openProjectDetail(id) {
+      currentDetailProjectId = id;
+      const proj = publishedProjects.find(p => String(p.id) === String(id)) || publishedProjects[0];
+      if (!proj) return;
+
+      if (document.getElementById('detailMainImg')) document.getElementById('detailMainImg').src = proj.img;
+      if (document.getElementById('detailProjectTitle')) document.getElementById('detailProjectTitle').textContent = proj.title;
+      if (document.getElementById('detailAuthorName')) document.getElementById('detailAuthorName').textContent = proj.student;
+      if (document.getElementById('detailAuthorDept')) document.getElementById('detailAuthorDept').textContent = proj.dept;
+      if (document.getElementById('detailLikes')) document.getElementById('detailLikes').textContent = (proj.likes !== undefined ? proj.likes : 412) + ' คน';
+
+      const descEl = document.getElementById('detailProjectDesc');
+      if (descEl) descEl.textContent = proj.desc || 'โครงการวิจัยและพัฒนาวิศวกรรมปฏิบัติการระดับสูง โดยนักเรียน KOSEN-KMITL';
+
+      // 1. Web Link
+      const webUrlEl = document.getElementById('detailWebLinkUrl');
+      const webBtnEl = document.getElementById('detailWebLinkBtn');
+      const link = proj.webLink || ('https://github.com/kosen-kmitl/project-' + (proj.id || 'repo'));
+      if (webUrlEl) { webUrlEl.href = link; webUrlEl.textContent = link; }
+      if (webBtnEl) { webBtnEl.href = link; }
+
+      // 2. Video Link
+      const videoIframe = document.getElementById('detailVideoIframe');
+      if (videoIframe) {
+        let vSrc = proj.videoLink || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+        if (vSrc.includes('youtube.com/watch?v=')) {
+          vSrc = vSrc.replace('watch?v=', 'embed/');
+        }
+        videoIframe.src = vSrc;
+      }
+
+      // 3. Code File & Snippet
+      const codeFileNameEl = document.getElementById('detailCodeFileName');
+      const codeSnippetEl = document.getElementById('detailCodeSnippet');
+      const fName = proj.codeFileName || (proj.dept === 'วิศวกรรมคอมพิวเตอร์' ? 'main.py' : (proj.dept === 'วิศวกรรมไฟฟ้า' ? 'circuit_control.c' : 'robot_arm.cpp'));
+
+      if (codeFileNameEl) codeFileNameEl.textContent = '📄 ' + fName;
+      if (codeSnippetEl) {
+        codeSnippetEl.textContent = proj.codeSnippet || `// Attached File: ${fName}\n#include <ESP32Servo.h>\nServo motor;\n\nvoid setup() {\n  Serial.begin(115200);\n  motor.attach(18);\n}\n\nvoid loop() {\n  motor.write(90);\n  delay(500);\n}`;
+      }
+
+      // Dynamic & Secure comment list rendering
+      const commentList = document.getElementById('commentList');
+      if (commentList) {
+        if (proj.comments && proj.comments.length > 0) {
+          commentList.innerHTML = proj.comments.map(c => `
+            <div class="comment-item">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop" class="avatar">
+              <div>
+                <div style="font-weight: 600; font-size: 14px;">${escapeHTML(c.author)} &bull; <span style="color: var(--color-slate-400); font-weight: 400;">โพสต์เมื่อสักครู่</span></div>
+                <p style="font-size: 14px; color: var(--color-slate-700); margin-top: 4px;">${escapeHTML(c.text)}</p>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          commentList.innerHTML = `
+            <div style="text-align: center; color: var(--color-slate-400); padding: 24px; font-size: 13.5px;">
+              ยังไม่มีความคิดเห็นสำหรับผลงานนี้ มาร่วมแบ่งปันไอเดียกัน!
+            </div>
+          `;
+        }
+      }
+
+      navigateToPage('page-detail');
+    }
+
+    let uploadedCodeFileName = '';
+
+    function handleCodeFileUpload(event) {
+      const file = event.target && event.target.files && event.target.files[0];
+      if (file) {
+        uploadedCodeFileName = file.name;
+        if (document.getElementById('uploadCodeFileName')) {
+          document.getElementById('uploadCodeFileName').value = file.name;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (document.getElementById('uploadCodeSnippet')) {
+            document.getElementById('uploadCodeSnippet').value = e.target.result;
+          }
+          showToast(`📄 อ่านไฟล์โค้ด "${file.name}" สำเร็จแล้ว!`);
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    function downloadAttachedCodeFile() {
+      const codeSnippet = document.getElementById('detailCodeSnippet') ? document.getElementById('detailCodeSnippet').textContent : '';
+      const fNameEl = document.getElementById('detailCodeFileName');
+      let fName = fNameEl ? fNameEl.textContent.replace('📄 ', '').trim() : 'kosen_code_file.c';
+      
+      const blob = new Blob([codeSnippet], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(`📥 ดาวน์โหลดไฟล์ "${fName}" เรียบร้อยแล้ว!`);
+    }
+
+    function rejectProject(id) {
+      const idx = pendingProjects.findIndex(p => String(p.id) === String(id));
+      if (idx !== -1) {
+        const rejected = pendingProjects.splice(idx, 1)[0];
+        renderAllViews();
+        showToast(`❌ ปฏิเสธคำขอผลงาน "${rejected.title}" แล้ว`);
+      }
+    }
+
+    function toggleProjectFeatured(id) {
+      const proj = publishedProjects.find(p => String(p.id) === String(id));
+      if (proj) {
+        proj.isFeaturedHome = !proj.isFeaturedHome;
+        renderAllViews();
+        showToast(proj.isFeaturedHome ? '🌟 ปักหมุดผลงานบนหน้าแรกเรียบร้อยแล้ว' : 'ยกเลิกการปักหมุดบนหน้าแรกแล้ว');
+      }
+    }
+
+    async function submitNewProjectForApproval() {
+      const title = document.getElementById('uploadTitle').value.trim() || 'ผลงานนวัตกรรมวิศวกรรมใหม่';
+      const dept = document.getElementById('uploadDept').value;
+      const student = document.getElementById('uploadStudent').value.trim() || 'นักศึกษา KOSEN';
+      const desc = document.getElementById('uploadDesc').value.trim() || 'รายละเอียดและแนวทางการทำงานวิจัย...';
+      const webLink = document.getElementById('uploadWebLink') ? document.getElementById('uploadWebLink').value.trim() : '';
+      const videoLink = document.getElementById('uploadVideoLink') ? document.getElementById('uploadVideoLink').value.trim() : '';
+      const codeFileName = document.getElementById('uploadCodeFileName') ? document.getElementById('uploadCodeFileName').value.trim() : (uploadedCodeFileName || '');
+      const codeSnippet = document.getElementById('uploadCodeSnippet') ? document.getElementById('uploadCodeSnippet').value.trim() : '';
+
+      const { generation, department } = parseEmailInfo(currentSupabaseUser?.email || '');
+
+      if (supabaseClient && currentUserId) {
+        try {
+          const { error } = await supabaseClient.from('projects').insert({
+            title: title,
+            category: dept,
+            description: desc,
+            media_type: videoLink ? 'video' : 'image',
+            media_url: videoLink || 'student_project_4_1785907257636.jpg',
+            external_link: webLink,
+            attachment_name: codeFileName || 'source_code.py',
+            attachment_url: codeSnippet,
+            author_id: currentUserId,
+            generation: generation || 'รุ่น 6',
+            department: department || dept
+          });
+
+          if (!error) {
+            await fetchProjects();
+            showToast('📤 บันทึกผลงานลงฐานข้อมูล Supabase เรียบร้อยแล้ว!');
+            setTimeout(() => navigateToPage('page-portfolio'), 700);
+            return;
+          }
+        } catch(e) { console.error('Supabase submit error:', e); }
+      }
+
+      pendingProjects.push({
+        id: Date.now(),
+        title: title,
+        student: student,
+        dept: dept,
+        img: 'student_project_4_1785907257636.jpg',
+        date: 'วันนี้',
+        desc: desc,
+        webLink: webLink,
+        videoLink: videoLink,
+        codeFileName: codeFileName || 'source_code.py',
+        codeSnippet: codeSnippet
+      });
+
+      // Clear form inputs
+      if (document.getElementById('uploadTitle')) document.getElementById('uploadTitle').value = '';
+      if (document.getElementById('uploadDesc')) document.getElementById('uploadDesc').value = '';
+      if (document.getElementById('uploadWebLink')) document.getElementById('uploadWebLink').value = '';
+      if (document.getElementById('uploadVideoLink')) document.getElementById('uploadVideoLink').value = '';
+      if (document.getElementById('uploadCodeFileInput')) document.getElementById('uploadCodeFileInput').value = '';
+      if (document.getElementById('uploadCodeFileName')) document.getElementById('uploadCodeFileName').value = '';
+      if (document.getElementById('uploadCodeSnippet')) document.getElementById('uploadCodeSnippet').value = '';
+      uploadedCodeFileName = '';
+
+      renderAllViews();
+      showToast('📤 ส่งคำขอโพสต์ผลงานเรียบร้อยแล้ว!');
+      setTimeout(() => navigateToPage('page-portfolio'), 700);
+    }
+
+    function openAddNewsModal() { document.getElementById('addNewsModalBackdrop').classList.add('active'); }
+    function closeAddNewsModal() { document.getElementById('addNewsModalBackdrop').classList.remove('active'); }
+
+    function submitNewNewsPost() {
+      const title = document.getElementById('newNewsTitle').value.trim();
+      const cat = document.getElementById('newNewsCategory').value;
+      const desc = document.getElementById('newNewsDesc').value.trim();
+      if (!title) return;
+
+      newsItems.push({
+        id: Date.now(),
+        title: title,
+        desc: desc || 'ประกาศข่าวสารสถาบัน KOSEN-KMITL',
+        category: cat,
+        date: '5 สิงหาคม 2569',
+        img: '',
+        isFeatured: false
+      });
+
+      closeAddNewsModal();
+      renderAllViews();
+      showToast('📰 โพสต์ข่าวสารใหม่เรียบร้อยแล้ว!');
+    }
+
+    function deleteNewsPost(id) {
+      newsItems = newsItems.filter(n => String(n.id) !== String(id));
+      renderAllViews();
+      showToast('🗑️ ลบข่าวสารเรียบร้อยแล้ว');
+    }
+
+    function openAddDocModal() { document.getElementById('addDocModalBackdrop').classList.add('active'); }
+    function closeAddDocModal() { document.getElementById('addDocModalBackdrop').classList.remove('active'); }
+
+    function submitNewDocPost() {
+      const title = document.getElementById('newDocTitle').value.trim();
+      const desc = document.getElementById('newDocDesc').value.trim();
+      const size = document.getElementById('newDocSize').value.trim();
+      if (!title) return;
+
+      docItems.push({
+        id: Date.now(),
+        title: title,
+        desc: desc || 'เอกสารวิชาการ KOSEN-KMITL',
+        date: '5 ส.ค. 2569',
+        size: size || '1.2 MB PDF',
+        icon: 'file-text'
+      });
+
+      closeAddDocModal();
+      renderAllViews();
+      showToast('📄 เพิ่มเอกสารดาวน์โหลดใหม่เรียบร้อยแล้ว!');
+    }
+
+    function deleteDocPost(id) {
+      docItems = docItems.filter(d => String(d.id) !== String(id));
+      renderAllViews();
+      showToast('🗑️ ลบเอกสารเรียบร้อยแล้ว');
+    }
+
+    function saveCurriculumEdit(deptKey) {
+      if (deptKey === 'cs') {
+        const val = document.getElementById('admCsDesc').value;
+        deptsData.cs.shortDesc = val;
+        document.getElementById('curric-desc-cs').textContent = val;
+      } else if (deptKey === 'ee') {
+        const val = document.getElementById('admEeDesc').value;
+        deptsData.ee.shortDesc = val;
+        document.getElementById('curric-desc-ee').textContent = val;
+      } else if (deptKey === 'me') {
+        const val = document.getElementById('admMeDesc').value;
+        deptsData.me.shortDesc = val;
+        document.getElementById('curric-desc-me').textContent = val;
+      }
+      showToast(`💾 บันทึกการแก้ไขหลักสูตร ${deptKey.toUpperCase()} สำเร็จ!`);
+    }
+
+    function updatePendingBadge() {
+      const badge = document.getElementById('pendingCountBadge');
+      const admBadge = document.getElementById('admPendingCount');
+      if (badge) badge.textContent = pendingProjects.length;
+      if (admBadge) admBadge.textContent = pendingProjects.length;
+    }
+
+    function setRole(roleName) {
+      currentRole = roleName;
+      
+      document.querySelectorAll('.demo-role-btn').forEach(btn => btn.classList.remove('active'));
+      const activeDemoBtn = document.getElementById('dr-' + roleName.toLowerCase());
+      if (activeDemoBtn) activeDemoBtn.classList.add('active');
+
+      const roleBadge = document.getElementById('userRoleBadge');
+      const roleMap = { 'Student': 'นักเรียน', 'Visitor': '👤 บุคคลทั่วไป', 'Teacher': 'อาจารย์', 'Admin': '🔐 ผู้ดูแลระบบ' };
+      roleBadge.textContent = roleMap[roleName] || roleName;
+
+      if (roleName === 'Admin') {
+        roleBadge.className = 'badge-pill badge-purple';
+      } else if (roleName === 'Student' || roleName === 'Teacher') {
+        roleBadge.className = 'badge-pill badge-blue';
+      } else {
+        roleBadge.className = 'badge-pill badge-slate';
+      }
+
+      const isAdmin = (roleName === 'Admin');
+      document.getElementById('navAdminItem').style.display = isAdmin ? 'block' : 'none';
+      document.getElementById('adminAddNewsBtn').style.display = isAdmin ? 'inline-flex' : 'none';
+      document.getElementById('adminAddDocBtn').style.display = isAdmin ? 'inline-flex' : 'none';
+      document.getElementById('adminCurriculumEditBtn').style.display = isAdmin ? 'inline-flex' : 'none';
+      document.getElementById('adminPendingNoticeBtn').style.display = isAdmin ? 'inline-flex' : 'none';
+      
+      const footerAdminItem = document.getElementById('footerAdminItem');
+      if (footerAdminItem) footerAdminItem.style.display = isAdmin ? 'block' : 'none';
+
+      const floatPostBtn = document.getElementById('floatingPostBtn');
+      if (floatPostBtn) floatPostBtn.style.display = (roleName === 'Student' || roleName === 'Admin') ? 'flex' : 'none';
+
+      // Toggle Login Button vs Profile Avatar Picture
+      const isLoggedIn = (roleName !== 'Visitor');
+      const navLoginBtn = document.getElementById('navLoginBtn');
+      const navProfilePill = document.getElementById('navProfilePill');
+      if (navLoginBtn) navLoginBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
+      if (navProfilePill) navProfilePill.style.display = isLoggedIn ? 'flex' : 'none';
+
+      const profRoleDisp = document.getElementById('profileRoleDisplay');
+      if (profRoleDisp) {
+        const roleLabels = { 'Admin': 'ผู้ดูแลระบบ (Admin)', 'Student': 'นักเรียน (Student)', 'Teacher': 'อาจารย์ (Teacher)', 'Visitor': 'บุคคลทั่วไป (Visitor)' };
+        profRoleDisp.value = roleLabels[roleName] || roleName;
+      }
+
+      renderNewsList();
+      renderDocsTable();
+    }
+
+    let userAvatarUrl = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop';
+
+    function changeUserAvatar(newUrl, showNotification = true) {
+      userAvatarUrl = newUrl;
+      const navAvatar = document.getElementById('navAvatarImg');
+      const profileAvatar = document.getElementById('profileLargeAvatar');
+      if (navAvatar) navAvatar.src = userAvatarUrl;
+      if (profileAvatar) profileAvatar.src = userAvatarUrl;
+      if (showNotification) showToast('✨ เปลี่ยนรูปโปรไฟล์เรียบร้อยแล้ว!');
+    }
+
+    function handleProfileAvatarUpload(event) {
+      const file = event.target && event.target.files && event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          changeUserAvatar(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function saveProfileInfo() {
+      const name = document.getElementById('profileNameInput')?.value.trim();
+      const dept = document.getElementById('profileDeptDisplay')?.value.trim();
+      
+      if (isDemoSession) {
+        showToast(`💾 [โหมดจำลอง] บันทึกข้อมูลของ "${name || 'ผู้ใช้งาน'}" เรียบร้อยแล้ว!`);
+        return;
+      }
+
+      if (supabaseClient && currentUserId) {
+        try {
+          await supabaseClient.from('profiles').update({
+            full_name: name,
+            department: dept,
+            avatar_url: userAvatarUrl,
+            updated_at: new Date().toISOString()
+          }).eq('id', currentUserId);
+        } catch(e) {
+          console.warn('Profile update note:', e);
+        }
+      }
+      showToast(`💾 บันทึกข้อมูลส่วนตัวของ "${name || 'ผู้ใช้งาน'}" เรียบร้อยแล้ว!`);
+    }
+
+    async function logoutUser() {
+      isDemoSession = false;
+      if (supabaseClient) {
+        try { await supabaseClient.auth.signOut(); } catch(e) { console.warn('SignOut note:', e); }
+      }
+      currentUserId = null;
+      currentSupabaseUser = null;
+      setRole('Visitor');
+      showToast('🔒 ออกจากระบบเรียบร้อยแล้ว');
+      navigateToPage('page-home');
+    }
+
+    function switchAdminTab(tabKey) {
+      document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('adm-tab-' + tabKey).classList.add('active');
+
+      document.getElementById('adm-sec-approvals').style.display = (tabKey === 'approvals') ? 'block' : 'none';
+      document.getElementById('adm-sec-featured').style.display = (tabKey === 'featured') ? 'block' : 'none';
+      document.getElementById('adm-sec-curriculum').style.display = (tabKey === 'curriculum') ? 'block' : 'none';
+      document.getElementById('adm-sec-news').style.display = (tabKey === 'news') ? 'block' : 'none';
+      document.getElementById('adm-sec-docs').style.display = (tabKey === 'docs') ? 'block' : 'none';
+    }
+
+    function openDeptModal(deptKey) {
+      const data = deptsData[deptKey];
+      if (!data) return;
+
+      document.getElementById('modalDeptTitleTh').textContent = data.nameTh;
+      document.getElementById('modalDeptTitleEn').textContent = data.nameEn;
+      document.getElementById('modalDeptOverview').textContent = data.overview;
+      document.getElementById('modalDeptLink').href = data.link;
+
+      const subjContainer = document.getElementById('modalDeptSubjects');
+      subjContainer.innerHTML = '';
+      data.subjects.forEach(s => {
+        const tag = document.createElement('span');
+        tag.style.cssText = 'background: #FFF7ED; color: #F97316; font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 999px;';
+        tag.textContent = s;
+        subjContainer.appendChild(tag);
+      });
+
+      const careerContainer = document.getElementById('modalDeptCareers');
+      careerContainer.innerHTML = '';
+      data.careers.forEach(c => {
+        const li = document.createElement('li');
+        li.style.cssText = 'padding: 8px 0; border-bottom: 1px solid #F1F5F9; font-size: 13px; display: flex; items-center; gap: 8px; color: #334155;';
+        li.innerHTML = `<span style="color: #F97316; font-weight: 700;">&rarr;</span> ${c}`;
+        careerContainer.appendChild(li);
+      });
+
+      document.getElementById('deptModalBackdrop').classList.add('active');
+    }
+
+    function closeDeptModal() { document.getElementById('deptModalBackdrop').classList.remove('active'); }
+
+    function switchProgramLevel(level) {
+      const btnAssoc = document.getElementById('prog-btn-associate');
+      const btnBach = document.getElementById('prog-btn-bachelor');
+      const contentAssoc = document.getElementById('prog-content-associate');
+      const contentBach = document.getElementById('prog-content-bachelor');
+
+      if (level === 'associate') {
+        btnAssoc.style.background = '#0F172A'; btnAssoc.style.color = '#FFFFFF';
+        btnBach.style.background = 'transparent'; btnBach.style.color = '#64748B';
+        contentAssoc.style.display = 'block'; contentBach.style.display = 'none';
+      } else {
+        btnBach.style.background = '#0F172A'; btnBach.style.color = '#FFFFFF';
+        btnAssoc.style.background = 'transparent'; btnAssoc.style.color = '#64748B';
+        contentBach.style.display = 'block'; contentAssoc.style.display = 'none';
+      }
+    }
+
+    function navigateToPage(pageId) {
+      if (pageId === 'page-admin' && currentRole !== 'Admin') {
+        showToast('⚠️ ปฏิเสธการเข้าถึง: หน้านี้สำหรับผู้ดูแลระบบ (Admin) เท่านั้น');
+        return;
+      }
+
+      const navLinks = document.querySelector('.nav-links');
+      if (navLinks) {
+        navLinks.classList.remove('active-mobile');
+        navLinks.style.display = '';
+      }
+
+      document.querySelectorAll('.page-view').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+      });
+
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) {
+        targetPage.classList.add('active');
+        targetPage.style.display = 'block';
+      }
+
+      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+      const navMap = { 'page-home': 'nl-home', 'page-curriculum': 'nl-curriculum', 'page-portfolio': 'nl-portfolio', 'page-news': 'nl-news', 'page-docs': 'nl-docs', 'page-admin': 'nl-admin' };
+      if (navMap[pageId]) {
+        const activeNav = document.getElementById(navMap[pageId]);
+        if (activeNav) activeNav.classList.add('active');
+      }
+
+      if (pageId === 'page-portfolio') {
+        renderPortfolioGallery();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function swapDetailImg(thumbEl, imgSrc) {
+      document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active'));
+      thumbEl.classList.add('active');
+      document.getElementById('detailMainImg').src = imgSrc;
+    }
+
+    let currentDetailProjectId = null;
+
+    async function incrementLike(btnEl, projId) {
+      btnEl.classList.toggle('liked');
+      const countSpan = btnEl.querySelector('span');
+      let currentVal = parseInt(countSpan.textContent) || 0;
+      let newVal = btnEl.classList.contains('liked') ? currentVal + 1 : Math.max(0, currentVal - 1);
+      countSpan.textContent = newVal;
+
+      const pId = projId || currentDetailProjectId;
+      if (supabaseClient && pId) {
+        try {
+          await supabaseClient.from('projects').update({ likes_count: newVal }).eq('id', pId);
+        } catch(e) { console.error('Like update error:', e); }
+      }
+      showToast(btnEl.classList.contains('liked') ? '❤️ กดถูกใจผลงานแล้ว!' : 'ยกเลิกการถูกใจ');
+    }
+
+    async function postComment() {
+      const input = document.getElementById('commentInput');
+      const val = input ? input.value.trim() : '';
+      if (!val) return;
+
+      if (supabaseClient && currentUserId && currentDetailProjectId) {
+        try {
+          const { error } = await supabaseClient.from('project_comments').insert({
+            project_id: currentDetailProjectId,
+            user_id: currentUserId,
+            content: val
+          });
+          if (!error) {
+            await fetchProjects();
+            if (input) input.value = '';
+            showToast('💬 บันทึกความคิดเห็นลงฐานข้อมูล Supabase เรียบร้อยแล้ว!');
+            return;
+          }
+        } catch(e) { console.error('Comment insert error:', e); }
+      }
+
+      // Local fallback
+      const commentList = document.getElementById('commentList');
+      if (commentList) {
+        const newComment = document.createElement('div');
+        newComment.className = 'comment-item';
+        newComment.innerHTML = `
+          <img src="${escapeHTML(userAvatarUrl)}" class="avatar">
+          <div>
+            <div style="font-weight: 600; font-size: 14px;">ผู้ใช้งาน (${escapeHTML(currentRole)}) &bull; <span style="color: var(--color-slate-400); font-weight: 400;">เมื่อสักครู่</span></div>
+            <p style="font-size: 14px; color: var(--color-slate-700); margin-top: 4px;">${escapeHTML(val)}</p>
+          </div>
+        `;
+        commentList.appendChild(newComment);
+      }
+      if (input) input.value = '';
+      showToast('💬 ส่งความคิดเห็นเรียบร้อยแล้ว!');
+    }
+
+    function nextRegisterStep(stepNum) {
+      const s1 = document.getElementById('regStep1');
+      const s2 = document.getElementById('regStep2');
+      if (s1) s1.style.display = (stepNum === 1) ? 'block' : 'none';
+      if (s2) s2.style.display = (stepNum === 2) ? 'block' : 'none';
+      const d1 = document.getElementById('stepDot1');
+      const d2 = document.getElementById('stepDot2');
+      if (d1) d1.className = (stepNum >= 1) ? 'step-dot active' : 'step-dot';
+      if (d2) d2.className = (stepNum >= 2) ? 'step-dot active' : 'step-dot';
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+  </script>
+</body>
+</html>
